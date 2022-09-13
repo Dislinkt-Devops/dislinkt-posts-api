@@ -1,10 +1,6 @@
 package com.dislinkt.post.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.dislinkt.post.enums.ReactionType;
 
@@ -12,6 +8,7 @@ import com.dislinkt.post.enums.ReactionType;
 public class Reaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column

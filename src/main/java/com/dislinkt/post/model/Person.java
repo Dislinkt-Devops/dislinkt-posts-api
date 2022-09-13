@@ -14,7 +14,6 @@ import com.dislinkt.post.enums.ProfilePrivacy;
 public class Person {
 
     @Id
-    @GeneratedValue(generator = "UUID")
     private UUID id;
     
     @Column(name = "first_name")
@@ -149,9 +148,9 @@ public class Person {
     public Person() {
     }
 
-    public Person(String firstName, String lastName, Gender gender, String phoneNumber, Date dateOfBirth,
+    public Person(UUID id, String firstName, String lastName, Gender gender, String phoneNumber, Date dateOfBirth,
             ProfilePrivacy privacy) {
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
