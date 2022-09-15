@@ -148,9 +148,8 @@ public class Person {
     public Person() {
     }
 
-    public Person(UUID id, String firstName, String lastName, Gender gender, String phoneNumber, Date dateOfBirth,
+    public Person(String firstName, String lastName, Gender gender, String phoneNumber, Date dateOfBirth,
             ProfilePrivacy privacy) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
