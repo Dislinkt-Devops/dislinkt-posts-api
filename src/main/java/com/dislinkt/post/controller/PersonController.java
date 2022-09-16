@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dislinkt.post.dto.ErrorDTO;
 import com.dislinkt.post.dto.PersonDTO;
 import com.dislinkt.post.dto.ResponseDTO;
-import com.dislinkt.post.mapper.PersonMapper;
-import com.dislinkt.post.model.Person;
 import com.dislinkt.post.service.PersonService;
 
 @RestController
@@ -29,22 +27,17 @@ public class PersonController {
     @Autowired
     private PersonService service;
 
-    private PersonMapper mapper = new PersonMapper();
-
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<ResponseDTO<List<PersonDTO>>> getAll(){
-        List<PersonDTO> list = mapper.toDtoList(service.findAll());
-        ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(list);
+        ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.findAll());
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addPerson(@RequestHeader("id") UUID id, @RequestBody PersonDTO dto){
         try{
-            Person person = mapper.toEntity(dto);
-            person.setId(id);
-            person = service.create(person);
-            return new ResponseEntity<>(mapper.toDto(person), HttpStatus.OK);
+            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.create(id, dto));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
         }
         catch (Exception ex){
             ErrorDTO error = new ErrorDTO(ex.getMessage());

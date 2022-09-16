@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dislinkt.post.dto.PersonDTO;
+import com.dislinkt.post.mapper.PersonMapper;
 import com.dislinkt.post.model.Person;
 import com.dislinkt.post.repository.PersonRepository;
 
@@ -15,19 +17,23 @@ public class PersonService {
     @Autowired
     private PersonRepository repository;
 
-    public List<Person> findAll(){
-        return repository.findAll();
+    private PersonMapper mapper = new PersonMapper();
+
+    public List<PersonDTO> findAll(){
+        return mapper.toDtoList(repository.findAll());
     }
 
-    public Person findOne(UUID id){
-        for (Person person: findAll()){
+    private Person findOne(UUID id){
+        for (Person person: repository.findAll()){
             if (person.getId().equals(id))
                 return person;
         }
         return null;
     }
 
-    public Person create(Person person) throws Exception{
+    public PersonDTO create(UUID id, PersonDTO dto) throws Exception{
+        Person person = mapper.toEntity(dto);
+        person.setId(id);
         if (findOne(person.getId()) != null)
             throw new Exception("User with given id already exists!");
         if (person.getFirstName().isBlank())
@@ -40,7 +46,8 @@ public class PersonService {
             throw new Exception("Gender cannot be empty!");
         if (person.getPrivacy() == null)
             throw new Exception("Privacy cannot be empty!");
-        return repository.save(person);
+        person = repository.save(person);
+        return mapper.toDto(person);
     }
     
 }
