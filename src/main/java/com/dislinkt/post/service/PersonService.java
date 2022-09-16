@@ -20,14 +20,16 @@ public class PersonService {
     }
 
     public Person findOne(UUID id){
-        return repository.findById(id).orElse(null);
+        for (Person person: findAll()){
+            if (person.getId().equals(id))
+                return person;
+        }
+        return null;
     }
 
     public Person create(Person person) throws Exception{
-        System.out.println(person.getId());
-        if (repository.findById(person.getId()).orElse(null) != null){
+        if (findOne(person.getId()) != null)
             throw new Exception("User with given id already exists!");
-        }
         if (person.getFirstName().isBlank())
             throw new Exception("First name cannot be empty!");
         if (person.getLastName().isBlank())

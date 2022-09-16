@@ -39,12 +39,10 @@ public class PersonController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addPerson(@RequestHeader("id") String id, @RequestBody PersonDTO dto){
+    public ResponseEntity addPerson(@RequestHeader("id") UUID id, @RequestBody PersonDTO dto){
         try{
-            if (service.findOne(UUID.fromString("2c20bbc0-4693-11eb-b378-0242ac130001")) == null)
-			    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
             Person person = mapper.toEntity(dto);
-            person.setId(UUID.fromString(id));
+            person.setId(id);
             person = service.create(person);
             return new ResponseEntity<>(mapper.toDto(person), HttpStatus.OK);
         }
