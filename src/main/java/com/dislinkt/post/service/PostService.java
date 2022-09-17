@@ -64,5 +64,12 @@ public class PostService {
         updated = repository.save(updated);
         return mapper.toDto(updated);
     }
+
+    public void delete(UUID personId, Integer id) throws Exception{
+        Post forDeletion = repository.findById(id).orElse(null);
+        if (!forDeletion.getPerson().getId().equals(personId))
+            throw new Exception("Only the user who made the post may remove it!");
+        repository.deleteById(id);
+    }
     
 }

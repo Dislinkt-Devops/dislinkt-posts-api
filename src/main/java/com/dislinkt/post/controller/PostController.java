@@ -86,5 +86,17 @@ public class PostController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value="{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deletePost(@RequestHeader("id") UUID personId, @PathVariable Integer id){
+        try{
+            service.delete(personId, id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
     
 }
