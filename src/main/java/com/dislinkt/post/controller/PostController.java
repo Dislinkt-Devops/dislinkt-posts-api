@@ -20,18 +20,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dislinkt.post.service.PostService;
 import com.dislinkt.post.dto.ErrorDTO;
-import com.dislinkt.post.dto.PersonDTO;
+import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.dto.ResponseDTO;
-import com.dislinkt.post.service.PersonService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/people")
-public class PersonController {
-    
+@RequestMapping("/posts")
+public class PostController {
+
     @Autowired
-    private PersonService service;
+    private PostService service;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -45,15 +45,15 @@ public class PersonController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<ResponseDTO<List<PersonDTO>>> getAll(){
-        ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.findAll());
+    public ResponseEntity<ResponseDTO<List<PostDTO>>> getAll(){
+        ResponseDTO<List<PostDTO>> ret = new ResponseDTO<>(service.findAll());
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addPerson(@RequestHeader("id") UUID id, @Valid @RequestBody PersonDTO dto){
+    public ResponseEntity addPost(@RequestHeader("id") UUID personId, @Valid @RequestBody PostDTO dto){
         try{
-            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.create(id, dto));
+            ResponseDTO<PostDTO> ret = new ResponseDTO<>(service.create(personId, dto));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         }
         catch (Exception ex){
@@ -61,4 +61,5 @@ public class PersonController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
+    
 }

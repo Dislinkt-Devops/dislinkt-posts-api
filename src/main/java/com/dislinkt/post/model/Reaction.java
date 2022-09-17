@@ -54,6 +54,10 @@ public class Reaction {
         this.post = post;
     }
 
+    public Reaction(ReactionType type) {
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }
