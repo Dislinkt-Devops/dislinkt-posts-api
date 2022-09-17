@@ -51,5 +51,18 @@ public class PostService {
         System.out.println("person posts size: "+person.getPosts().size());
         return mapper.toDto(post);
     }
+
+    public PostDTO update(UUID personId, Integer id, PostDTO dto) throws Exception{
+        Post updated = repository.findById(id).orElse(null);
+        if (!updated.getPerson().getId().equals(personId))
+            throw new Exception("Only the user who made the post may edit it!");
+        if (dto.getLinks().size() == 0 && dto.getText().isBlank() && dto.getImageUrl().isBlank())
+            throw new Exception("Cannot have an empty post!");
+        updated.setImageUrl(dto.getImageUrl());
+        updated.setLinks(dto.getLinks());
+        updated.setText(dto.getText());
+        updated = repository.save(updated);
+        return mapper.toDto(updated);
+    }
     
 }

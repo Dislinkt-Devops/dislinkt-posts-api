@@ -74,5 +74,17 @@ public class PostController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value="{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity editPost(@RequestHeader("id") UUID personId, @PathVariable Integer id, @Valid @RequestBody PostDTO dto){
+        try{
+            ResponseDTO<PostDTO> ret = new ResponseDTO<>(service.update(personId, id, dto));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
     
 }
