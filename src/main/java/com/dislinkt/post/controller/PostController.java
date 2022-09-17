@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,18 @@ public class PostController {
     public ResponseEntity<ResponseDTO<List<PostDTO>>> getAll(){
         ResponseDTO<List<PostDTO>> ret = new ResponseDTO<>(service.findAll());
         return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="{personId}", method = RequestMethod.GET)
+    public ResponseEntity findByPerson(@PathVariable UUID personId){
+        try{
+            ResponseDTO<List<PostDTO>> ret = new ResponseDTO<>(service.findByPersonId(personId));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
