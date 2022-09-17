@@ -19,7 +19,6 @@ public class PersonDTO {
     @NotBlank(message = "Phone number can't be blank")
     private String phoneNumber;
 
-    @NotBlank(message = "Date of birth can't be blank")
     private Date dateOfBirth;
 
     private String bio;

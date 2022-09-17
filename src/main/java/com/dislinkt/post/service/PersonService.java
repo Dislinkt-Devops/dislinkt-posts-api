@@ -36,16 +36,6 @@ public class PersonService {
         person.setId(id);
         if (findOne(person.getId()) != null)
             throw new Exception("User with given id already exists!");
-        if (person.getFirstName().isBlank())
-            throw new Exception("First name cannot be empty!");
-        if (person.getLastName().isBlank())
-            throw new Exception("Last name cannot be empty!");
-        if (person.getPhoneNumber().isBlank())
-            throw new Exception("Phone number cannot be empty!");
-        if (person.getGender() == null)
-            throw new Exception("Gender cannot be empty!");
-        if (person.getPrivacy() == null)
-            throw new Exception("Privacy cannot be empty!");
         person = repository.save(person);
         return mapper.toDto(person);
     }
