@@ -45,7 +45,7 @@ public class PostController {
         return ret;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping()
     public ResponseEntity<ResponseDTO<List<PostDTO>>> getAll(){
         ResponseDTO<List<PostDTO>> ret = new ResponseDTO<>(service.findAll());
         return new ResponseEntity<>(ret, HttpStatus.OK);
