@@ -57,7 +57,7 @@ public class PersonService {
         if (!sender.getFollowing().contains(receiver) || !receiver.getFollowing().contains(sender))
             return Boolean.FALSE;
 
-        if (sender.getBlockedBy().contains(receiver))
+        if (sender.getBlockedBy().contains(receiver) || receiver.getBlockedBy().contains(sender))
             return Boolean.FALSE;
 
         return Boolean.TRUE;
