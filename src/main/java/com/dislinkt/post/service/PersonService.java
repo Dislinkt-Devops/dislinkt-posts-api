@@ -49,5 +49,19 @@ public class PersonService {
         person.setPosts(posts);
         repository.save(person);
     }
+
+    public Boolean canInteractWith(UUID id, UUID receiverId) throws Exception{
+        if (findOne(id) == null)
+            throw new Exception("sender with given id doesn't exist");
+        Person sender = findOne(id);
+        if (findOne(receiverId) == null)
+            throw new Exception("receiver with given id doesn't exist");
+        Person receiver = findOne(receiverId);
+        if (!sender.getFollowing().contains(receiver) || !receiver.getFollowing().contains(sender))
+            return Boolean.FALSE;
+        if (sender.getBlockedBy().contains(receiver))
+            return Boolean.FALSE;
+        return Boolean.TRUE;
+    }
     
 }

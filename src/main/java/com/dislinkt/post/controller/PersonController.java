@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,18 @@ public class PersonController {
     public ResponseEntity addPerson(@RequestHeader("id") UUID id, @Valid @RequestBody PersonDTO dto){
         try{
             ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.create(id, dto));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "{receiver}", method = RequestMethod.GET)
+    public ResponseEntity checkForInteraction(@RequestHeader("id") UUID id, @PathVariable UUID receiver){
+        try{
+            ResponseDTO<Boolean> ret = new ResponseDTO<>(service.canInteractWith(id, receiver));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         }
         catch (Exception ex){
