@@ -28,16 +28,8 @@ public class PostService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    public List<PostDTO> findByPersonId(UUID personId) throws Exception{
-        Person person = personService.findOne(personId);
-        if (person == null)
-            throw new Exception("User with given id doesn't exist!");
-
-        List<Post> ret = new ArrayList<>();
-        for (Post p: person.getPosts())
-            ret.add(p);
-
-        return mapper.toDtoList(ret);
+    public List<PostDTO> findByPersonId(UUID personId){
+        return mapper.toDtoList(repository.findByPersonId(personId));
     }
 
     public PostDTO create(UUID personId, PostDTO dto) throws Exception{
