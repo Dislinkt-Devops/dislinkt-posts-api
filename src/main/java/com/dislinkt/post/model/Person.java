@@ -14,6 +14,7 @@ import com.dislinkt.post.enums.ProfilePrivacy;
 public class Person {
 
     @Id
+    @Column(columnDefinition = "uuid")
     private UUID id;
     
     @Column(name = "first_name")
