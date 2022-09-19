@@ -51,5 +51,28 @@ public class CommentService {
         comment = repository.save(comment);        
         return mapper.toDto(comment);
     }
+
+    public CommentDTO update(UUID personId, Integer id, CommentDTO dto)throws Exception{
+        Comment updated = repository.findById(id).orElse(null);
+        if (updated == null)
+            throw new Exception("Comment with given id doesn't exist!");
+
+        if (!updated.getPerson().getId().equals(personId))
+            throw new Exception("Only the owner of this comment may edit it!");
+
+        updated.setText(dto.getText());
+        
+        updated = repository.save(updated);        
+        return mapper.toDto(updated);
+    }
+
+    public void delete(UUID personId, Integer id) throws Exception{
+        Comment forDeletion = repository.findById(id).orElse(null);
+
+        if (!forDeletion.getPerson().getId().equals(personId))
+            throw new Exception("Only the user who made the comment may remove it!");
+
+        repository.deleteById(id);
+    }
     
 }
