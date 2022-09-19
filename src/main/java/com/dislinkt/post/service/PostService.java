@@ -32,6 +32,10 @@ public class PostService {
         return mapper.toDtoList(repository.findByPersonId(personId));
     }
 
+    public Post findOne(Integer id){
+        return repository.findById(id).orElse(null);
+    }
+
     public PostDTO create(UUID personId, PostDTO dto) throws Exception{
         Person person = personService.findOne(personId);
         if (personService.findOne(personId) == null)
