@@ -43,13 +43,13 @@ public class ReactionController {
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
-    @GetMapping("/likes/{postId}")
+    @GetMapping("/{postId}/likes")
     public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostLikes(@PathVariable Integer postId){
         List<ReactionDTO> ret = service.findAllLikesForPost(postId);
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
-    @GetMapping("/dislikes/{postId}")
+    @GetMapping("/{postId}/dislikes")
     public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostDislikes(@PathVariable Integer postId){
         List<ReactionDTO> ret = service.findAllDislikesForPost(postId);
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
