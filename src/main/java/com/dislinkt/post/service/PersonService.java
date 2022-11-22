@@ -23,7 +23,7 @@ public class PersonService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    private Person findOne(UUID id){
+    public Person findOne(UUID id){
         for (Person person: repository.findAll()){
             if (person.getId().equals(id))
                 return person;

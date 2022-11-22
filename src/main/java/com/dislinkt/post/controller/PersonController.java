@@ -51,7 +51,7 @@ public class PersonController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addPerson(@RequestHeader("id") UUID id, @Valid @RequestBody PersonDTO dto){
+    public ResponseEntity addPerson(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody PersonDTO dto){
         try{
             ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.create(id, dto));
             return new ResponseEntity<>(ret, HttpStatus.OK);
