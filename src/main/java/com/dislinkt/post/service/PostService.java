@@ -32,7 +32,7 @@ public class PostService {
         return mapper.toDtoList(repository.findByPersonId(personId));
     }
 
-    public Post findOne(Integer id){
+    public Post findOne(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
