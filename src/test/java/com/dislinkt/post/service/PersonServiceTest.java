@@ -1,5 +1,6 @@
 package com.dislinkt.post.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
@@ -38,6 +39,20 @@ public class PersonServiceTest {
 
         service.create(UUID.fromString(PersonConstants.NEW_ID), dto);
         assertTrue(service.findAll().size() > sizeBefore);
+    }
+
+    @Test
+    public void testAddUserWithNonUniqueId(){
+        PersonDTO dto = new PersonDTO(
+            null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME, 
+            PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, 
+            PersonConstants.PRIVACY);
+
+        try {
+            service.create(UUID.fromString(PersonConstants.EXISTING_ID), dto);
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "User with given id already exists!");
+        }
     }
     
 }

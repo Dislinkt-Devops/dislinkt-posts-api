@@ -18,6 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dislinkt.post.constants.PersonConstants;
+import com.dislinkt.post.dto.ErrorDTO;
 import com.dislinkt.post.dto.PersonDTO;
 import com.dislinkt.post.dto.ResponseDTO;
 import com.dislinkt.post.model.Person;
@@ -40,7 +41,7 @@ public class PersonControllerTest {
     public void testAddUserOk(){
         httpHeaders = new HttpHeaders();
         httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
-
+        
         PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
         PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
         HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
@@ -62,6 +63,114 @@ public class PersonControllerTest {
         assertEquals(addedPerson.getPhoneNumber(), PersonConstants.PHONE_NUMBER);
         assertEquals(addedPerson.getPrivacy().name(), PersonConstants.PRIVACY);
         assertEquals(addedPerson.getId().toString(), PersonConstants.NEW_ID);
+    }
+
+    @Test
+    public void testAddUserWithNonUniqueId(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
+        PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO.class);
+
+        ErrorDTO error = responseEntity.getBody();
+        String message = error.getError();
+
+        assertEquals(message, "User with given id already exists!");
+    }
+
+    @Test
+    public void testAddUserWithEmptyFirstName(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, "  ", PersonConstants.LAST_NAME,
+        PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO[]> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO[].class);
+
+        ErrorDTO[] errors = responseEntity.getBody();
+        String message = errors[0].getError();
+
+        assertEquals(message, "First name can't be blank");
+    }
+
+    @Test
+    public void testAddUserWithEmptyLastName(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, "  ",
+        PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO[]> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO[].class);
+
+        ErrorDTO[] errors = responseEntity.getBody();
+        String message = errors[0].getError();
+
+        assertEquals(message, "Last name can't be blank");
+    }
+
+    @Test
+    public void testAddUserWithEmptyGender(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
+        "  ", PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO[]> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO[].class);
+
+        ErrorDTO[] errors = responseEntity.getBody();
+        String message = errors[0].getError();
+
+        assertEquals(message, "Gender can't be blank");
+    }
+
+    @Test
+    public void testAddUserWithEmptyPhoneNumber(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
+        PersonConstants.GENDER, "   ", null, null, PersonConstants.PRIVACY);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO[]> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO[].class);
+
+        ErrorDTO[] errors = responseEntity.getBody();
+        String message = errors[0].getError();
+
+        assertEquals(message, "Phone number can't be blank");
+    }
+
+    @Test
+    public void testAddUserWithEmptyPrivacy(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
+        PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, "  ");
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
+
+        ResponseEntity<ErrorDTO[]> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
+         httpEntity, ErrorDTO[].class);
+
+        ErrorDTO[] errors = responseEntity.getBody();
+        String message = errors[0].getError();
+
+        assertEquals(message, "Privacy can't be blank");
     }
     
 }
