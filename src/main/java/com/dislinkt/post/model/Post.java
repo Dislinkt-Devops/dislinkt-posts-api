@@ -83,12 +83,11 @@ public class Post {
     public Post() {
     }
 
-    public Post(Integer id, String text, String imageUrl, List<String> links, Person person) {
+    public Post(Integer id, String text, String imageUrl, List<String> links) {
         this.id = id;
         this.text = text;
         this.imageUrl = imageUrl;
         this.links = links;
-        this.person = person;
         this.comments = new HashSet<>();
         this.reactions = new HashSet<>();
     }

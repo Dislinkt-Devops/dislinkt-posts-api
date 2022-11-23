@@ -14,6 +14,7 @@ import com.dislinkt.post.enums.ProfilePrivacy;
 public class Person {
 
     @Id
+    @Column(columnDefinition = "uuid")
     private UUID id;
     
     @Column(name = "first_name")
@@ -48,6 +49,26 @@ public class Person {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "person")
     private Set<Reaction> reactions;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "followers",
+        joinColumns = @JoinColumn(name = "follower_id"),
+        inverseJoinColumns = @JoinColumn(name = "followed_id"))
+    private Set<Person> following;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "following")
+    private Set<Person> followers;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "blocked",
+        joinColumns = @JoinColumn(name = "blocker_id"),
+        inverseJoinColumns = @JoinColumn(name = "blocked_id"))
+    private Set<Person> blocked;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "blocked")
+    private Set<Person> blockedBy;
 
     public UUID getId() {
         return id;
@@ -161,6 +182,38 @@ public class Person {
         this.comments = new HashSet<>();
         this.posts = new HashSet<>();
         this.reactions = new HashSet<>();
+    }
+
+    public Set<Person> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Set<Person> following) {
+        this.following = following;
+    }
+
+    public Set<Person> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<Person> followers) {
+        this.followers = followers;
+    }
+
+    public Set<Person> getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(Set<Person> blocked) {
+        this.blocked = blocked;
+    }
+
+    public Set<Person> getBlockedBy() {
+        return blockedBy;
+    }
+
+    public void setBlockedBy(Set<Person> blockedBy) {
+        this.blockedBy = blockedBy;
     }
 
 }
