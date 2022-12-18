@@ -18,6 +18,14 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getText() {
         return text;
     }
@@ -50,6 +58,10 @@ public class Comment {
         this.text = text;
         this.person = person;
         this.post = post;
+    }
+
+    public Comment(String text) {
+        this.text = text;
     }
 
 }

@@ -12,28 +12,30 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dislinkt.post.dto.CommentDTO;
 import com.dislinkt.post.dto.ErrorDTO;
-import com.dislinkt.post.dto.PersonDTO;
 import com.dislinkt.post.dto.ResponseDTO;
-import com.dislinkt.post.service.PersonService;
+import com.dislinkt.post.service.CommentService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/people")
-public class PersonController {
-    
+@RequestMapping("/comments")
+public class CommentController {
+
     @Autowired
-    private PersonService service;
+    private CommentService service;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,17 +48,23 @@ public class PersonController {
         return ret;
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseDTO<List<PersonDTO>>> getAll(){
-        ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.findAll());
-        return new ResponseEntity<>(ret, HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<ResponseDTO<List<CommentDTO>>> getAll(){
+        List<CommentDTO> ret = service.findAll();
+        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+    }
+    
+    @GetMapping("/{postId}")
+    public ResponseEntity<ResponseDTO<List<CommentDTO>>> findByPost(@PathVariable Integer postId){
+        List<CommentDTO> ret = service.findByPostId(postId);
+        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addPerson(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody PersonDTO dto){
+    public ResponseEntity addComment(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody CommentDTO dto){
         try{
-            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.create(id, dto));
-            return new ResponseEntity<>(ret, HttpStatus.OK);
+            CommentDTO ret = service.create(personId, dto);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
         }
         catch (Exception ex){
             ErrorDTO error = new ErrorDTO(ex.getMessage());
@@ -64,11 +72,23 @@ public class PersonController {
         }
     }
 
-    @GetMapping("/{receiver}")
-    public ResponseEntity checkForInteraction(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID receiver){
+    @PutMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity editComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer id, @Valid @RequestBody CommentDTO dto){
         try{
-            ResponseDTO<Boolean> ret = new ResponseDTO<>(service.canInteractWith(id, receiver));
-            return new ResponseEntity<>(ret, HttpStatus.OK);
+            CommentDTO ret = service.update(personId, id, dto);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer id){
+        try{
+            service.delete(personId, id);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception ex){
             ErrorDTO error = new ErrorDTO(ex.getMessage());
