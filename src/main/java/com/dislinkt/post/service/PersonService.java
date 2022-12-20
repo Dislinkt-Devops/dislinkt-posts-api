@@ -54,6 +54,9 @@ public class PersonService {
         if (receiver == null)
             throw new Exception("receiver with given id doesn't exist");
 
+        if (sender.getFollowers() == null || receiver.getFollowers() == null)
+            return Boolean.FALSE;
+
         if (!sender.getFollowing().contains(receiver) || !receiver.getFollowing().contains(sender))
             return Boolean.FALSE;
 
