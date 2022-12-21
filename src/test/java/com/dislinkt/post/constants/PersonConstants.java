@@ -11,5 +11,11 @@ public class PersonConstants {
 
     public static final String EXISTING_ID = "2c20b8c0-4693-11eb-b378-0242ac130002";
     public static final String EXISTING_ID_2 = "2c20b8c0-4693-11eb-b378-0242ac130003";
+
+    // one sided following
+    public static final String EXISTING_ID_3 = "2c20b8c0-4693-11eb-b378-0242ac130004";
+
+    // blocked another user
+    public static final String EXISTING_ID_4 = "2c20b8c0-4693-11eb-b378-0242ac130005";
     
 }

@@ -61,6 +61,17 @@ public class PersonServiceTest {
     }
 
     @Test
+    public void testCanInteractWithOK(){
+        try {
+            assertTrue(service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID_2)));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
     @Transactional
     @Rollback(true)
     public void testCanInteractWithNewUser(){
@@ -81,14 +92,41 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void testCanInteractWithOK(){
+    public void testCanInteractWithOnesidedFollowing(){
         try {
-            assertTrue(service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID_2)));
+            assertFalse(service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID_3)));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void testCanInteractWithABlocking(){
+        try {
+            assertFalse(service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID_4)));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCanInteractWithNonExistingSender(){
+        try {
+            service.canInteractWith(UUID.fromString(PersonConstants.NEW_ID), UUID.fromString(PersonConstants.EXISTING_ID));
+        } catch (Exception e) {
+            assertEquals("sender with given id doesn't exist", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCanInteractWithNonExistingReceiver(){
+        try {
+            service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.NEW_ID));
+        } catch (Exception e) {
+            assertEquals("receiver with given id doesn't exist", e.getMessage());
+        }
     }
     
 }

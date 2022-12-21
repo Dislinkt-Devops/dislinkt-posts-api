@@ -66,14 +66,14 @@ public class Person {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "blockers",
+        name = "blocking",
         joinColumns = @JoinColumn(name = "blocker_id"),
         inverseJoinColumns = @JoinColumn(name = "blocked_id"))
     private Set<Person> blocked;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "blockers",
+        name = "blocking",
         joinColumns = @JoinColumn(name = "blocked_id"),
         inverseJoinColumns = @JoinColumn(name = "blocker_id"))
     private Set<Person> blockedBy;
@@ -203,6 +203,10 @@ public class Person {
         this.comments = new HashSet<>();
         this.posts = new HashSet<>();
         this.reactions = new HashSet<>();
+        this.followers = new HashSet<>();
+        this.following = new HashSet<>();
+        this.blocked = new HashSet<>();
+        this.blockedBy = new HashSet<>();
     }
 
     public Set<Person> getFollowing() {
