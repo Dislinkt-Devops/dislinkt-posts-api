@@ -2,6 +2,7 @@ package com.dislinkt.post.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
 
@@ -171,6 +172,81 @@ public class PersonControllerTest {
         String message = errors[0].getError();
 
         assertEquals(message, "Privacy can't be blank");
+    }
+
+    @Test
+    public void testCanInteractWithOK(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);
+
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
+        String url = "/people/"+PersonConstants.EXISTING_ID_2;
+        ResponseEntity<ResponseDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+         httpEntity, ResponseDTO.class);
+
+        ResponseDTO<Boolean> response = responseEntity.getBody();
+        
+        assertEquals(Boolean.TRUE, response.getData());
+    }
+
+    @Test
+    public void testCanInteractWithNonExisingUser(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
+
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
+        String url = "/people/"+PersonConstants.EXISTING_ID_2;
+        ResponseEntity<ErrorDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+         httpEntity, ErrorDTO.class);
+
+        ErrorDTO response = responseEntity.getBody();
+        
+        assertEquals("sender with given id doesn't exist", response.getError());
+    }
+
+    @Test
+    public void testCanInteractWithNonExisingReceiver(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);
+
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
+        String url = "/people/"+PersonConstants.NEW_ID;
+        ResponseEntity<ErrorDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+         httpEntity, ErrorDTO.class);
+
+        ErrorDTO response = responseEntity.getBody();
+        
+        assertEquals("receiver with given id doesn't exist", response.getError());
+    }
+
+    @Test
+    public void testCanInteractWithOneSidedFollowing(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);
+
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
+        String url = "/people/"+PersonConstants.EXISTING_ID_3;
+        ResponseEntity<ResponseDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+         httpEntity, ResponseDTO.class);
+
+        ResponseDTO<Boolean> response = responseEntity.getBody();
+        
+        assertEquals(Boolean.FALSE, response.getData());
+    }
+
+    @Test
+    public void testCanInteractWithBlocking(){
+        httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);
+
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
+        String url = "/people/"+PersonConstants.EXISTING_ID_4;
+        ResponseEntity<ResponseDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+         httpEntity, ResponseDTO.class);
+
+        ResponseDTO<Boolean> response = responseEntity.getBody();
+        
+        assertEquals(Boolean.FALSE, response.getData());
     }
     
 }
