@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dislinkt.post.dto.PersonDTO;
-import com.dislinkt.post.model.Person;
 import com.dislinkt.post.repository.PersonRepository;
 import com.dislinkt.post.constants.PersonConstants;
 

@@ -18,3 +18,10 @@ insert into followers (follower_id, followed_id) values
 
 insert into blocking (blocker_id, blocked_id) values
     ('2C20B8C0469311EBB3780242AC130005', '2C20B8C0469311EBB3780242AC130002');
+
+insert into post (id, text, image_url, person_id) values
+    (1, 'this is a text', 'img1', '2C20B8C0469311EBB3780242AC130002'),
+    (2, 'this is a text also', 'img2', '2C20B8C0469311EBB3780242AC130003'),
+    (3, 'this is a text also also', 'img3', '2C20B8C0469311EBB3780242AC130002');
+
+insert into links (post_id, links) values (1, 'link1'), (1, 'link2'), (2, 'link3'), (2, 'link4');
