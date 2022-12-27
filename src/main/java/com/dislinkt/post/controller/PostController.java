@@ -40,9 +40,15 @@ public class PostController {
     }
 
     @GetMapping("/{personId}")
-    public ResponseEntity<ResponseDTO<List<PostDTO>>> findByPerson(@PathVariable UUID personId){
-        List<PostDTO> ret = service.findByPersonId(personId);
-        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+    public ResponseEntity findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID personId){
+        try{
+            List<PostDTO> ret = service.findByPersonId(userId, personId);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

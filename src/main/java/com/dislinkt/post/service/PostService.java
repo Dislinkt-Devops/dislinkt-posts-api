@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.post.dto.PostDTO;
+import com.dislinkt.post.enums.ProfilePrivacy;
 import com.dislinkt.post.mapper.PostMapper;
 import com.dislinkt.post.model.Person;
 import com.dislinkt.post.model.Post;
@@ -28,8 +29,23 @@ public class PostService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    public List<PostDTO> findByPersonId(UUID personId){
-        return mapper.toDtoList(repository.findByPersonId(personId));
+    public List<PostDTO> findByPersonId(UUID userId, UUID personId) throws Exception{
+        if (personService.findOne(userId) == null){
+            throw new Exception("User with given id doesn't exist!");
+        }
+        if (personService.findOne(personId) == null){
+            throw new Exception("Person with given id doesn't exist!");
+        }
+
+        boolean isOwner = userId.compareTo(personId) == 0;
+        Person user = personService.findOne(userId);
+        Person person = personService.findOne(personId);
+        boolean isPublic = person.getPrivacy() == ProfilePrivacy.PUBLIC;
+        boolean isFollowing = user.getFollowing().contains(person);
+        if (isOwner || isPublic || isFollowing)
+            return mapper.toDtoList(repository.findByPersonId(personId));
+        else
+            throw new Exception("You cannot view this user's posts!");
     }
 
     public Post findOne(Integer id) {
