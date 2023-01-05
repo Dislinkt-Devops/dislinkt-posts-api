@@ -1,7 +1,6 @@
 package com.dislinkt.post.dto;
 
 import java.util.List;
-import java.util.UUID;
 
 public class PostDTO {
 
@@ -13,7 +12,7 @@ public class PostDTO {
 
     private List<String> links;
 
-    private UUID personId;
+    private String personId;
 
     private List<CommentDTO> comments;
 
@@ -43,11 +42,11 @@ public class PostDTO {
         this.links = links;
     }
 
-    public UUID getPersonId() {
+    public String getPersonId() {
         return personId;
     }
 
-    public void setPersonId(UUID personId) {
+    public void setPersonId(String personId) {
         this.personId = personId;
     }
 
@@ -78,7 +77,7 @@ public class PostDTO {
     public PostDTO() {
     }
 
-    public PostDTO(Integer id, String text, String imageUrl, List<String> links, UUID personId, List<CommentDTO> comments,
+    public PostDTO(Integer id, String text, String imageUrl, List<String> links, String personId, List<CommentDTO> comments,
             List<ReactionDTO> reactions) {
         this.id = id;
         this.text = text;
@@ -89,7 +88,7 @@ public class PostDTO {
         this.reactions = reactions;
     }
 
-    public PostDTO(Integer id, String text, String imageUrl, List<String> links, UUID personId) {
+    public PostDTO(Integer id, String text, String imageUrl, List<String> links, String personId) {
         this.id = id;
         this.text = text;
         this.imageUrl = imageUrl;

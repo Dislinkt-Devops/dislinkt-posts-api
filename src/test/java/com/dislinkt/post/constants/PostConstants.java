@@ -16,4 +16,10 @@ public class PostConstants {
         }
     };
 
+    public static int UPDATE_ID = 4;
+
+    public static int DELETE_ID = 5;
+
+    public static int NON_EXISTANT_ID = 99;
+
 }

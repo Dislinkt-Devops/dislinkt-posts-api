@@ -1,6 +1,5 @@
 package com.dislinkt.post.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,21 +56,37 @@ public class PostService {
         if (personService.findOne(personId) == null)
             throw new Exception("User with given id doesn't exist!");
 
+        if (dto.getLinks() == null || dto.getText() == null || dto.getImageUrl() == null)
+            throw new Exception("Cannot submit an empty post!");
+
         if (dto.getLinks().size() == 0 && dto.getText().isBlank() && dto.getImageUrl().isBlank())
             throw new Exception("Cannot submit an empty post!");
 
         Post post = mapper.toEntity(dto);
         post.setPerson(person);
+        post.setId(repository.findAll().size()+1);
+
+        System.out.println("New user id: "+post.getId());
 
         post = repository.save(post);
+        System.out.println("WHHYYYYYYYYYY???????????");
         return mapper.toDto(post);
     }
 
     public PostDTO update(UUID personId, Integer id, PostDTO dto) throws Exception{
         Post updated = repository.findById(id).orElse(null);
 
+        if (updated == null)
+            throw new Exception("Post with given id doesn't exist!");
+
+        if (personService.findOne(personId) == null)
+            throw new Exception("User with given id doesn't exist!");
+
         if (!updated.getPerson().getId().equals(personId))
             throw new Exception("Only the user who made the post may edit it!");
+
+        if (dto.getLinks() == null || dto.getText() == null || dto.getImageUrl() == null)
+            throw new Exception("Cannot have an empty post!");
 
         if (dto.getLinks().size() == 0 && dto.getText().isBlank() && dto.getImageUrl().isBlank())
             throw new Exception("Cannot have an empty post!");
@@ -86,6 +101,12 @@ public class PostService {
 
     public void delete(UUID personId, Integer id) throws Exception{
         Post forDeletion = repository.findById(id).orElse(null);
+
+        if (forDeletion == null)
+            throw new Exception("Post with given id doesn't exist!");
+
+        if (personService.findOne(personId) == null)
+            throw new Exception("User with given id doesn't exist!");
 
         if (!forDeletion.getPerson().getId().equals(personId))
             throw new Exception("Only the user who made the post may remove it!");

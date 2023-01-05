@@ -8,11 +8,13 @@ import org.springframework.test.context.TestPropertySource;
 import com.dislinkt.post.controller.PersonControllerTest;
 import com.dislinkt.post.repository.PostRepositoryTest;
 import com.dislinkt.post.service.PersonServiceTest;
+import com.dislinkt.post.service.PostCRUDServiceTest;
 import com.dislinkt.post.service.PostServiceTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({PersonServiceTest.class, PersonControllerTest.class,
-                PostRepositoryTest.class, PostServiceTest.class})
+                PostRepositoryTest.class, PostServiceTest.class,
+            PostCRUDServiceTest.class})
 @TestPropertySource("classpath:test-users.properties")
 class PostApplicationTests {
 	
