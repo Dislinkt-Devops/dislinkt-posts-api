@@ -51,6 +51,10 @@ public class PostService {
         return repository.findById(id).orElse(null);
     }
 
+    public PostDTO findOneDto(Integer id) {
+        return mapper.toDto(repository.findById(id).orElse(null));
+    }
+
     public PostDTO create(UUID personId, PostDTO dto) throws Exception{
         Person person = personService.findOne(personId);
         if (personService.findOne(personId) == null)
@@ -64,7 +68,10 @@ public class PostService {
 
         Post post = mapper.toEntity(dto);
         post.setPerson(person);
-        post.setId(repository.findAll().size()+1);
+        if (repository.findAll().size()>0)
+            post.setId(repository.findAll().get(repository.findAll().size()-1).getId()+1);
+        else
+            post.setId(1);
 
         System.out.println("New user id: "+post.getId());
 

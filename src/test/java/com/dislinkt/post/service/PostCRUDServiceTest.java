@@ -35,7 +35,7 @@ public class PostCRUDServiceTest {
     public void testCreateOK() throws Exception{
         
         PostDTO dto = new PostDTO(null, PostConstants.NEW_TEXT, PostConstants.NEW_URL,
-         PostConstants.NEW_LINKS, PersonConstants.EXISTING_ID_5);
+         PostConstants.NEW_LINKS, null);
         
         int beforeAdd = service.findAll().size();
         int beforeAddforUser = service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_5),
@@ -55,7 +55,7 @@ public class PostCRUDServiceTest {
     @Rollback(true)
     public void testCreateEmptyText() throws Exception{
         PostDTO dto = new PostDTO(null, "", PostConstants.NEW_URL,
-         PostConstants.NEW_LINKS, PersonConstants.EXISTING_ID_5);
+         PostConstants.NEW_LINKS, null);
         
          int beforeAdd = service.findAll().size();
          int beforeAddforUser = service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_5),
@@ -74,7 +74,7 @@ public class PostCRUDServiceTest {
     @Rollback(true)
     public void testCreateEmptyURL() throws Exception{
         PostDTO dto = new PostDTO(null, PostConstants.NEW_TEXT, " ",
-         PostConstants.NEW_LINKS, PersonConstants.EXISTING_ID_5);
+         PostConstants.NEW_LINKS, null);
         
          int beforeAdd = service.findAll().size();
          int beforeAddforUser = service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_5),
@@ -93,7 +93,7 @@ public class PostCRUDServiceTest {
     @Rollback(true)
     public void testCreateEmptyLinks() throws Exception{
         PostDTO dto = new PostDTO(null, PostConstants.NEW_TEXT, PostConstants.NEW_URL,
-         new ArrayList<>(), PersonConstants.EXISTING_ID_5);
+         new ArrayList<>(), null);
         
          int beforeAdd = service.findAll().size();
          int beforeAddforUser = service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_5),
@@ -112,7 +112,7 @@ public class PostCRUDServiceTest {
     @Rollback(true)
     public void testCreateTwoEmptyFields() throws Exception{
         PostDTO dto = new PostDTO(null, " ", PostConstants.NEW_URL,
-         new ArrayList<>(), PersonConstants.EXISTING_ID_5);
+         new ArrayList<>(), null);
         
          int beforeAdd = service.findAll().size();
          int beforeAddforUser = service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_5),
@@ -129,7 +129,7 @@ public class PostCRUDServiceTest {
     @Test
     public void testCreateNonExistentUser(){
         PostDTO dto = new PostDTO(5, PostConstants.NEW_TEXT, PostConstants.NEW_URL,
-         new ArrayList<>(), PersonConstants.NON_EXISTING_ID);
+         new ArrayList<>(), null);
         
         try {
             service.create(UUID.fromString(PersonConstants.NON_EXISTING_ID), dto);
@@ -141,7 +141,7 @@ public class PostCRUDServiceTest {
     @Test
     public void testCreateEmptyPost(){
         PostDTO dto = new PostDTO(null, "", "",
-         new ArrayList<>(), PersonConstants.EXISTING_ID_2);
+         new ArrayList<>(), null);
         
         try {
             service.create(UUID.fromString(PersonConstants.EXISTING_ID_2), dto);
