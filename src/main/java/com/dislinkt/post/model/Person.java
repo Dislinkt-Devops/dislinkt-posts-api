@@ -50,24 +50,32 @@ public class Person {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "person")
     private Set<Reaction> reactions;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "followers",
         joinColumns = @JoinColumn(name = "follower_id"),
         inverseJoinColumns = @JoinColumn(name = "followed_id"))
     private Set<Person> following;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "following")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "followers",
+        joinColumns = @JoinColumn(name = "followed_id"),
+        inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private Set<Person> followers;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "blocked",
+        name = "blocking",
         joinColumns = @JoinColumn(name = "blocker_id"),
         inverseJoinColumns = @JoinColumn(name = "blocked_id"))
     private Set<Person> blocked;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "blocked")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "blocking",
+        joinColumns = @JoinColumn(name = "blocked_id"),
+        inverseJoinColumns = @JoinColumn(name = "blocker_id"))
     private Set<Person> blockedBy;
 
     public UUID getId() {
@@ -166,6 +174,19 @@ public class Person {
         this.reactions = reactions;
     }
 
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object arg0) {
+        Person person = (Person) arg0;
+        if (!(arg0 instanceof Person)) return false;
+        int comparison = person.getId().compareTo(this.id);
+        return comparison == 0;
+    }
+
     public Person() {
     }
 
@@ -182,6 +203,10 @@ public class Person {
         this.comments = new HashSet<>();
         this.posts = new HashSet<>();
         this.reactions = new HashSet<>();
+        this.followers = new HashSet<>();
+        this.following = new HashSet<>();
+        this.blocked = new HashSet<>();
+        this.blockedBy = new HashSet<>();
     }
 
     public Set<Person> getFollowing() {
