@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dislinkt.post.dto.PersonDTO;
-import com.dislinkt.post.model.Person;
 import com.dislinkt.post.repository.PersonRepository;
 import com.dislinkt.post.constants.PersonConstants;
 
@@ -114,7 +113,7 @@ public class PersonServiceTest {
     @Test
     public void testCanInteractWithNonExistingSender(){
         try {
-            service.canInteractWith(UUID.fromString(PersonConstants.NEW_ID), UUID.fromString(PersonConstants.EXISTING_ID));
+            service.canInteractWith(UUID.fromString(PersonConstants.NON_EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID));
         } catch (Exception e) {
             assertEquals("sender with given id doesn't exist", e.getMessage());
         }
@@ -123,7 +122,7 @@ public class PersonServiceTest {
     @Test
     public void testCanInteractWithNonExistingReceiver(){
         try {
-            service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.NEW_ID));
+            service.canInteractWith(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.NON_EXISTING_ID));
         } catch (Exception e) {
             assertEquals("receiver with given id doesn't exist", e.getMessage());
         }

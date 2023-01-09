@@ -17,5 +17,9 @@ public class PersonConstants {
 
     // blocked another user
     public static final String EXISTING_ID_4 = "2c20b8c0-4693-11eb-b378-0242ac130005";
+
+    public static final String EXISTING_ID_5 = "2c20b8c0-4693-11eb-b378-0242ac130006";
+
+    public static final String NON_EXISTING_ID = "6d5cd5a6-8286-48ee-9ebb-72ddecebc155";
     
 }

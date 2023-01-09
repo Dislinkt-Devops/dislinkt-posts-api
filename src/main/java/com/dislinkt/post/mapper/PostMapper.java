@@ -29,7 +29,7 @@ public class PostMapper implements MapperInterface<Post, PostDTO> {
             entity.getText(), 
             entity.getImageUrl(), 
             entity.getLinks(), 
-            entity.getPerson().getId());
+            entity.getPerson().getId().toString());
     }
 
     @Override
