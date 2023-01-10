@@ -71,5 +71,23 @@ public class PostServiceTest {
             assertEquals("You cannot view this user's posts!", e.getMessage());
         }
     }
+
+    @Test
+    public void testGetByUserIdWhenIsBlocked() {
+        try {
+            service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID_4));
+        } catch (Exception e) {
+            assertEquals("This user has you blocked!", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetByUserIdWhenIsBlocking() {
+        try {
+            service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID_4), UUID.fromString(PersonConstants.EXISTING_ID));
+        } catch (Exception e) {
+            assertEquals("You have blocked this user!", e.getMessage());
+        }
+    }
     
 }
