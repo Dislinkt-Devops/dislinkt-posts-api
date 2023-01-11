@@ -39,6 +39,12 @@ public class PostService {
         boolean isOwner = userId.compareTo(personId) == 0;
         Person user = personService.findOne(userId);
         Person person = personService.findOne(personId);
+
+        if (user.getBlockedBy().contains(person))
+            throw new Exception("This user has you blocked!");
+        if (person.getBlockedBy().contains(user))
+            throw new Exception("You have blocked this user!");
+
         boolean isPublic = person.getPrivacy() == ProfilePrivacy.PUBLIC;
         boolean isFollowing = user.getFollowing().contains(person);
         if (isOwner || isPublic || isFollowing)
