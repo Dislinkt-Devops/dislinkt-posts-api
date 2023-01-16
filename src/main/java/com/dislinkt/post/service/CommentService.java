@@ -92,6 +92,9 @@ public class CommentService {
     public void delete(UUID personId, Integer id) throws Exception{
         Comment forDeletion = repository.findById(id).orElse(null);
 
+        if (forDeletion == null)
+            throw new Exception("Comment with given id doesn't exist!");
+
         if (!forDeletion.getPerson().getId().equals(personId))
             throw new Exception("Only the user who made the comment may remove it!");
 

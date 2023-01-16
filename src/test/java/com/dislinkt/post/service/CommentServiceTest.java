@@ -113,5 +113,88 @@ public class CommentServiceTest {
             assertEquals("You are blocking this user!", e.getMessage());
         }
     }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testUpdateOK() throws Exception{
+        CommentDTO dto = new CommentDTO(null, CommentConstants.NEW_TEXT, null, null);
+        int beforeAdd = service.findAll().size();
+
+        dto = service.update(UUID.fromString(PersonConstants.EXISTING_ID_5), CommentConstants.EXISTING_ID, dto);
+
+        assertEquals(PersonConstants.EXISTING_ID_5, dto.getPersonId().toString());
+        assertEquals(CommentConstants.POST_1, dto.getPostId());
+        assertEquals(service.findAll().size(), beforeAdd);
+        assertEquals(CommentConstants.NEW_TEXT, dto.getText());
+    }
+
+    @Test
+    public void testUpdateNonExistingId(){
+        CommentDTO dto = new CommentDTO(null, CommentConstants.NEW_TEXT, null, null);
+        try {
+            service.update(UUID.fromString(PersonConstants.EXISTING_ID_5), CommentConstants.NON_EXISTING_ID, dto);
+        } catch (Exception e) {
+            assertEquals("Comment with given id doesn't exist!", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateWrongUser(){
+        CommentDTO dto = new CommentDTO(null, CommentConstants.NEW_TEXT, null, null);
+        try {
+            service.update(UUID.fromString(PersonConstants.EXISTING_ID), CommentConstants.EXISTING_ID, dto);
+        } catch (Exception e) {
+            assertEquals("Only the owner of this comment may edit it!", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateNonExistingUser(){
+        CommentDTO dto = new CommentDTO(null, CommentConstants.NEW_TEXT, null, null);
+        try {
+            service.update(UUID.fromString(PersonConstants.NON_EXISTING_ID), CommentConstants.EXISTING_ID, dto);
+        } catch (Exception e) {
+            assertEquals("Only the owner of this comment may edit it!", e.getMessage());
+        }
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testDeleteOK() throws Exception{
+        int beforeAdd = service.findAll().size();
+
+        service.delete(UUID.fromString(PersonConstants.EXISTING_ID_3), CommentConstants.EXISTING_ID_2);
+
+        assertTrue(service.findAll().size() < beforeAdd);
+    }
+
+    @Test
+    public void testDeleteNonExistingComment(){
+        try {
+            service.delete(UUID.fromString(PersonConstants.EXISTING_ID_3), CommentConstants.NON_EXISTING_ID);
+        } catch (Exception e) {
+            assertEquals("Comment with given id doesn't exist!", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDeleteNonExistingUser(){
+        try {
+            service.delete(UUID.fromString(PersonConstants.NON_EXISTING_ID), CommentConstants.EXISTING_ID_2);
+        } catch (Exception e) {
+            assertEquals("Only the user who made the comment may remove it!", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDeleteWrongUser(){
+        try {
+            service.delete(UUID.fromString(PersonConstants.EXISTING_ID_4), CommentConstants.EXISTING_ID_2);
+        } catch (Exception e) {
+            assertEquals("Only the user who made the comment may remove it!", e.getMessage());
+        }
+    }
     
 }
