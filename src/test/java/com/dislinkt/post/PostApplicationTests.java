@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.test.context.TestPropertySource;
 
+import com.dislinkt.post.controller.CommentControllerTest;
 import com.dislinkt.post.controller.PersonControllerTest;
 import com.dislinkt.post.controller.PostControllerTest;
 import com.dislinkt.post.repository.CommentRepositoryTest;
@@ -18,7 +19,8 @@ import com.dislinkt.post.service.PostServiceTest;
 @SuiteClasses({PersonServiceTest.class, PersonControllerTest.class,
                 PostRepositoryTest.class, PostServiceTest.class,
                 PostCRUDServiceTest.class, PostControllerTest.class,
-            CommentRepositoryTest.class, CommentServiceTest.class})
+                CommentRepositoryTest.class, CommentServiceTest.class,
+                CommentControllerTest.class})
 @TestPropertySource("classpath:test-users.properties")
 class PostApplicationTests {
 	
