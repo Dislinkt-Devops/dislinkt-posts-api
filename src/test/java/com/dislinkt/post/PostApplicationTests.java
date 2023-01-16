@@ -9,6 +9,7 @@ import com.dislinkt.post.controller.PersonControllerTest;
 import com.dislinkt.post.controller.PostControllerTest;
 import com.dislinkt.post.repository.CommentRepositoryTest;
 import com.dislinkt.post.repository.PostRepositoryTest;
+import com.dislinkt.post.service.CommentServiceTest;
 import com.dislinkt.post.service.PersonServiceTest;
 import com.dislinkt.post.service.PostCRUDServiceTest;
 import com.dislinkt.post.service.PostServiceTest;
@@ -17,7 +18,7 @@ import com.dislinkt.post.service.PostServiceTest;
 @SuiteClasses({PersonServiceTest.class, PersonControllerTest.class,
                 PostRepositoryTest.class, PostServiceTest.class,
                 PostCRUDServiceTest.class, PostControllerTest.class,
-            CommentRepositoryTest.class})
+            CommentRepositoryTest.class, CommentServiceTest.class})
 @TestPropertySource("classpath:test-users.properties")
 class PostApplicationTests {
 	

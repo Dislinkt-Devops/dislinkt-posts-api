@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.post.dto.CommentDTO;
+import com.dislinkt.post.enums.ProfilePrivacy;
 import com.dislinkt.post.mapper.CommentMapper;
 import com.dislinkt.post.model.Comment;
 import com.dislinkt.post.model.Person;
@@ -47,6 +48,28 @@ public class CommentService {
         if (post == null)
             throw new Exception("Post with given id doesn't exist!");
         comment.setPost(post);
+
+        Person postPublisher = personService.findOne(post.getPerson().getId());
+
+        if (postPublisher.getBlockedBy().contains(person)){
+            throw new Exception("You are blocking this user!");
+        }
+
+        if (person.getBlockedBy().contains(postPublisher)){
+            throw new Exception("You are blocked by this user!");
+        }
+
+        if (postPublisher.getPrivacy() == ProfilePrivacy.PRIVATE){
+            System.out.println("It's a start");
+            if (postPublisher.getId().compareTo(personId) != 0 && !postPublisher.getFollowers().contains(person)){
+                throw new Exception("You can't leave a comment on this post!");
+            }
+        }
+
+        if (repository.findAll().size()>0)
+            comment.setId(repository.findAll().get(repository.findAll().size()-1).getId()+1);
+        else
+            comment.setId(1);
 
         comment = repository.save(comment);        
         return mapper.toDto(comment);
