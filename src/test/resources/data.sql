@@ -28,3 +28,10 @@ insert into post (id, text, image_url, person_id) values
     (5, 'this is a deletion post', 'img99', '2C20B8C0469311EBB3780242AC130005');
     
 insert into links (post_id, links) values (1, 'link1'), (1, 'link2'), (2, 'link3'), (2, 'link4'), (4, 'link99');
+
+insert into comment (id, text, person_id, post_id) values
+    (1, 'This is my first comment :)', '2C20B8C0469311EBB3780242AC130006', 2),
+    (2, 'This is my second comment :)', '2C20B8C0469311EBB3780242AC130003', 2),
+    (3, 'This is my third comment :)', '2C20B8C0469311EBB3780242AC130004', 2),
+    (4, 'This is my fourth comment :)', '2C20B8C0469311EBB3780242AC130002', 3),
+    (5, 'This is my fifth comment :)', '2C20B8C0469311EBB3780242AC130003', 3);

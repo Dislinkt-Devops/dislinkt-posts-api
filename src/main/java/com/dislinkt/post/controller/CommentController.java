@@ -72,7 +72,7 @@ public class CommentController {
         }
     }
 
-    @PutMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity editComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer id, @Valid @RequestBody CommentDTO dto){
         try{
             CommentDTO ret = service.update(personId, id, dto);
