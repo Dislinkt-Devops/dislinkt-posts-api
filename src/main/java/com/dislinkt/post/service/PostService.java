@@ -53,11 +53,11 @@ public class PostService {
             throw new Exception("You cannot view this user's posts!");
     }
 
-    public Post findOne(Integer id) {
+    public Post findOne(UUID id) {
         return repository.findById(id).orElse(null);
     }
 
-    public PostDTO findOneDto(Integer id) {
+    public PostDTO findOneDto(UUID id) {
         return mapper.toDto(repository.findById(id).orElse(null));
     }
 
@@ -74,19 +74,12 @@ public class PostService {
 
         Post post = mapper.toEntity(dto);
         post.setPerson(person);
-        if (repository.findAll().size()>0)
-            post.setId(repository.findAll().get(repository.findAll().size()-1).getId()+1);
-        else
-            post.setId(1);
-
-        System.out.println("New user id: "+post.getId());
 
         post = repository.save(post);
-        System.out.println("WHHYYYYYYYYYY???????????");
         return mapper.toDto(post);
     }
 
-    public PostDTO update(UUID personId, Integer id, PostDTO dto) throws Exception{
+    public PostDTO update(UUID personId, UUID id, PostDTO dto) throws Exception{
         Post updated = repository.findById(id).orElse(null);
 
         if (updated == null)
@@ -112,7 +105,7 @@ public class PostService {
         return mapper.toDto(updated);
     }
 
-    public void delete(UUID personId, Integer id) throws Exception{
+    public void delete(UUID personId, UUID id) throws Exception{
         Post forDeletion = repository.findById(id).orElse(null);
 
         if (forDeletion == null)

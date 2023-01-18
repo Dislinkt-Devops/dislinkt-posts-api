@@ -4,19 +4,19 @@ import java.util.UUID;
 
 public class ReactionDTO {
 
-    private Integer id;
+    private UUID id;
 
     private String type;
 
     private UUID personId;
 
-    private Integer postId;
+    private UUID postId;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -36,18 +36,18 @@ public class ReactionDTO {
         this.personId = personId;
     }
     
-    public Integer getPostId() {
+    public UUID getPostId() {
         return postId;
     }
 
-    public void setPostId(Integer postId) {
+    public void setPostId(UUID postId) {
         this.postId = postId;
     }
 
     public ReactionDTO() {
     }
 
-    public ReactionDTO(Integer id, String type, UUID personId, Integer postId) {
+    public ReactionDTO(UUID id, String type, UUID personId, UUID postId) {
         this.id = id;
         this.type = type;
         this.personId = personId;

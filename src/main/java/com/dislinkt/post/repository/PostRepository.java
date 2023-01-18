@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.dislinkt.post.model.Post;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer>{
+public interface PostRepository extends JpaRepository<Post, UUID>{
     
     List<Post> findByPersonId(UUID id);
 

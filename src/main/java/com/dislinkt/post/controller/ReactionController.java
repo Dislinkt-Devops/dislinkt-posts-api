@@ -38,19 +38,19 @@ public class ReactionController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findByPost(@PathVariable Integer postId){
+    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findByPost(@PathVariable UUID postId){
         List<ReactionDTO> ret = service.findByPostId(postId);
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/likes")
-    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostLikes(@PathVariable Integer postId){
+    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostLikes(@PathVariable UUID postId){
         List<ReactionDTO> ret = service.findAllLikesForPost(postId);
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/dislikes")
-    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostDislikes(@PathVariable Integer postId){
+    public ResponseEntity<ResponseDTO<List<ReactionDTO>>> findPostDislikes(@PathVariable UUID postId){
         List<ReactionDTO> ret = service.findAllDislikesForPost(postId);
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class ReactionController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity changeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer postId){
+    public ResponseEntity changeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID postId){
         try{
             ReactionDTO ret = service.update(personId, postId);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -80,7 +80,7 @@ public class ReactionController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity removeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer postId){
+    public ResponseEntity removeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID postId){
         try{
             service.delete(personId, postId);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -10,12 +10,12 @@ import com.dislinkt.post.enums.ReactionType;
 import com.dislinkt.post.model.Reaction;
 
 @Repository
-public interface ReactionRepository extends JpaRepository<Reaction, Integer>{
+public interface ReactionRepository extends JpaRepository<Reaction, UUID>{
 
-    List<Reaction> findByPostId(Integer id);
+    List<Reaction> findByPostId(UUID id);
 
-    List<Reaction> findByTypeAndPostId(ReactionType type, Integer id);
+    List<Reaction> findByTypeAndPostId(ReactionType type, UUID id);
 
-    Reaction findByPostIdAndPersonId(Integer postId, UUID personId);
+    Reaction findByPostIdAndPersonId(UUID postId, UUID personId);
     
 }
