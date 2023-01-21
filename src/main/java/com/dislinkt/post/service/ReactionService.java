@@ -32,19 +32,19 @@ public class ReactionService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    public List<ReactionDTO> findByPostId(Integer id){
+    public List<ReactionDTO> findByPostId(UUID id){
         return mapper.toDtoList(repository.findByPostId(id));
     }
 
-    public List<ReactionDTO> findAllLikesForPost(Integer postId){
+    public List<ReactionDTO> findAllLikesForPost(UUID postId){
         return mapper.toDtoList(repository.findByTypeAndPostId(ReactionType.LIKE, postId));
     }
 
-    public List<ReactionDTO> findAllDislikesForPost(Integer postId){
+    public List<ReactionDTO> findAllDislikesForPost(UUID postId){
         return mapper.toDtoList(repository.findByTypeAndPostId(ReactionType.DISLIKE, postId));
     }
 
-    public Reaction findByPostIdAndPersonId(Integer postId, UUID personId){
+    public Reaction findByPostIdAndPersonId(UUID postId, UUID personId){
         return repository.findByPostIdAndPersonId(postId, personId);
     }
 
@@ -64,7 +64,7 @@ public class ReactionService {
         return mapper.toDto(reaction);
     }
 
-    public ReactionDTO update(UUID personId, Integer postId) throws Exception{
+    public ReactionDTO update(UUID personId, UUID postId) throws Exception{
         Reaction reaction = repository.findByPostIdAndPersonId(postId, personId);
         if (reaction == null){
             throw new Exception("User hasn't left a reaction on this post!");
@@ -83,7 +83,7 @@ public class ReactionService {
         return mapper.toDto(reaction);
     }
 
-    public void delete(UUID personId, Integer postId) throws Exception{
+    public void delete(UUID personId, UUID postId) throws Exception{
         Reaction reaction = repository.findByPostIdAndPersonId(postId, personId);
         if (reaction == null){
             throw new Exception("User hasn't left a reaction on this post!");

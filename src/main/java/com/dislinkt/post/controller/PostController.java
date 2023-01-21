@@ -64,7 +64,7 @@ public class PostController {
     }
 
     @PutMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity editPost(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer id, @Valid @RequestBody PostDTO dto){
+    public ResponseEntity editPost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody PostDTO dto){
         try{
             PostDTO ret = service.update(personId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -76,7 +76,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletePost(@RequestHeader("X-User-Id") UUID personId, @PathVariable Integer id){
+    public ResponseEntity deletePost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
         try{
             service.delete(personId, id);
             return new ResponseEntity<>(HttpStatus.OK);

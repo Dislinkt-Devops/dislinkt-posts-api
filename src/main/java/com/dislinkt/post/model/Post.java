@@ -3,6 +3,7 @@ package com.dislinkt.post.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -10,7 +11,9 @@ import javax.persistence.*;
 public class Post {
 
     @Id
-    private Integer id;
+    @Column(columnDefinition = "uuid")
+    @GeneratedValue(generator = "uuid")
+    private UUID id;
 
     @Column
     private String text;
@@ -82,7 +85,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(Integer id, String text, String imageUrl, List<String> links) {
+    public Post(UUID id, String text, String imageUrl, List<String> links) {
         this.id = id;
         this.text = text;
         this.imageUrl = imageUrl;
@@ -91,11 +94,11 @@ public class Post {
         this.reactions = new HashSet<>();
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
     

@@ -2,6 +2,7 @@ package com.dislinkt.post.constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PostConstants {
     
@@ -16,10 +17,10 @@ public class PostConstants {
         }
     };
 
-    public static int UPDATE_ID = 4;
+    public static UUID UPDATE_ID = UUID.fromString("599703c2-9763-11ed-a8fc-0242ac120005");
 
-    public static int DELETE_ID = 5;
+    public static UUID DELETE_ID = UUID.fromString("599703c2-9763-11ed-a8fc-0242ac120006");
 
-    public static int NON_EXISTANT_ID = 99;
+    public static UUID NON_EXISTANT_ID = UUID.fromString("599663c2-9763-11ed-a8fc-0242ac120003");
 
 }

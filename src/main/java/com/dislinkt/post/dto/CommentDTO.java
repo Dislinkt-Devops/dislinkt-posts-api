@@ -6,20 +6,20 @@ import javax.validation.constraints.NotBlank;
 
 public class CommentDTO {
     
-    private Integer id;
+    private UUID id;
 
     @NotBlank(message = "You can't leave an empty comment!")
     private String text;
 
     private UUID personId;
 
-    private Integer postId;
+    private UUID postId;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -39,19 +39,19 @@ public class CommentDTO {
         this.personId = personId;
     }
 
-    public Integer getPostId() {
+    public UUID getPostId() {
         return postId;
     }
 
-    public void setPostId(Integer postId) {
+    public void setPostId(UUID postId) {
         this.postId = postId;
     }
 
     public CommentDTO() {
     }
 
-    public CommentDTO(Integer id, @NotBlank(message = "You can't leave an empty comment!") String text, UUID personId,
-            Integer postId) {
+    public CommentDTO(UUID id, @NotBlank(message = "You can't leave an empty comment!") String text, UUID personId,
+    UUID postId) {
         this.id = id;
         this.text = text;
         this.personId = personId;

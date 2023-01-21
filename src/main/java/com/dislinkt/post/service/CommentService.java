@@ -32,7 +32,7 @@ public class CommentService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    public List<CommentDTO> findByPostId(Integer id){
+    public List<CommentDTO> findByPostId(UUID id){
         return mapper.toDtoList(repository.findByPostId(id));
     }
 
@@ -66,16 +66,11 @@ public class CommentService {
             }
         }
 
-        if (repository.findAll().size()>0)
-            comment.setId(repository.findAll().get(repository.findAll().size()-1).getId()+1);
-        else
-            comment.setId(1);
-
         comment = repository.save(comment);        
         return mapper.toDto(comment);
     }
 
-    public CommentDTO update(UUID personId, Integer id, CommentDTO dto)throws Exception{
+    public CommentDTO update(UUID personId, UUID id, CommentDTO dto)throws Exception{
         Comment updated = repository.findById(id).orElse(null);
         if (updated == null)
             throw new Exception("Comment with given id doesn't exist!");
@@ -89,7 +84,7 @@ public class CommentService {
         return mapper.toDto(updated);
     }
 
-    public void delete(UUID personId, Integer id) throws Exception{
+    public void delete(UUID personId, UUID id) throws Exception{
         Comment forDeletion = repository.findById(id).orElse(null);
 
         if (forDeletion == null)

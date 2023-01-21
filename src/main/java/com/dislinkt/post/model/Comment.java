@@ -1,12 +1,16 @@
 package com.dislinkt.post.model;
 
+import java.util.UUID;
+
 import javax.persistence.*;
 
 @Entity
 public class Comment {
     
     @Id
-    private Integer id;
+    @Column(columnDefinition = "uuid")
+    @GeneratedValue(generator = "uuid")
+    private UUID id;
 
     @Column
     private String text;
@@ -17,11 +21,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -52,7 +56,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Integer id, String text, Person person, Post post) {
+    public Comment(UUID id, String text, Person person, Post post) {
         this.id = id;
         this.text = text;
         this.person = person;

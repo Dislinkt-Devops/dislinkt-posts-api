@@ -128,7 +128,7 @@ public class PostCRUDServiceTest {
 
     @Test
     public void testCreateNonExistentUser(){
-        PostDTO dto = new PostDTO(5, PostConstants.NEW_TEXT, PostConstants.NEW_URL,
+        PostDTO dto = new PostDTO(null, PostConstants.NEW_TEXT, PostConstants.NEW_URL,
          new ArrayList<>(), null);
         
         try {
