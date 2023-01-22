@@ -1,6 +1,7 @@
 package com.dislinkt.post.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,38 @@ public class PersonService {
 
         if (sender.getBlockedBy().contains(receiver) || receiver.getBlockedBy().contains(sender))
             return Boolean.FALSE;
+
+        return Boolean.TRUE;
+    }
+
+    public Boolean blockPerson(UUID id, UUID blockedId){
+        Person user = findOne(id);
+        if (user == null)
+            return Boolean.FALSE;
+
+        Person blockedPerson = findOne(blockedId);
+        if (blockedPerson == null)
+            return Boolean.FALSE;
+
+        if (user.getFollowers().contains(blockedPerson))
+        {
+            Set<Person> followers = user.getFollowers();
+            followers.remove(blockedPerson);
+            user.setFollowers(followers);
+            user = repository.save(user);
+        }
+        if (blockedPerson.getFollowers().contains(user))
+        {
+            Set<Person> followers = blockedPerson.getFollowers();
+            followers.remove(blockedPerson);
+            blockedPerson.setFollowers(followers);
+            blockedPerson = repository.save(blockedPerson);
+        }
+
+        Set<Person> blockedList = user.getBlocked();
+        blockedList.add(blockedPerson);
+        user.setBlocked(blockedList);
+        user = repository.save(user);
 
         return Boolean.TRUE;
     }

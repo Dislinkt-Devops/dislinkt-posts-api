@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,5 +75,11 @@ public class PersonController {
             ErrorDTO error = new ErrorDTO(ex.getMessage());
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/block/{blockedId}")
+    public ResponseEntity<ResponseDTO<Boolean>> blockUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID blockedId){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.blockPerson(id, blockedId));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }
