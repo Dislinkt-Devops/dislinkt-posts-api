@@ -8,17 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dislinkt.post.dto.ErrorDTO;
 import com.dislinkt.post.dto.ReactionDTO;
 import com.dislinkt.post.dto.ResponseDTO;
 import com.dislinkt.post.service.ReactionService;
@@ -55,40 +52,16 @@ public class ReactionController {
         return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addReaction(@RequestHeader("X-User-Id") UUID personId, @RequestBody ReactionDTO dto){
-        try{
-            ReactionDTO ret = service.create(personId, dto);
-            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            ErrorDTO error = new ErrorDTO(ex.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/my-reaction/{postId}")
+    public ResponseEntity<ResponseDTO<ReactionDTO>> findUserReaction(@RequestHeader("X-User-Id") UUID personId,  @PathVariable UUID postId){
+        ReactionDTO ret = service.findUserReaction(postId, personId);
+        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
-    @PutMapping("/{postId}")
-    public ResponseEntity changeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID postId){
-        try{
-            ReactionDTO ret = service.update(personId, postId);
-            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            ErrorDTO error = new ErrorDTO(ex.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @DeleteMapping("/{postId}")
-    public ResponseEntity removeReaction(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID postId){
-        try{
-            service.delete(personId, postId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch (Exception ex){
-            ErrorDTO error = new ErrorDTO(ex.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping(value="/toggle", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseDTO<Boolean>> toggleUserReaction(@RequestHeader("X-User-Id") UUID personId, @RequestBody ReactionDTO dto){
+        Boolean ret = service.toggleReaction(personId, dto);
+        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
     }
 
 }
