@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.post.dto.ReactionDTO;
+import com.dislinkt.post.enums.ProfilePrivacy;
 import com.dislinkt.post.enums.ReactionType;
 import com.dislinkt.post.mapper.ReactionMapper;
 import com.dislinkt.post.model.Person;
@@ -44,56 +45,60 @@ public class ReactionService {
         return mapper.toDtoList(repository.findByTypeAndPostId(ReactionType.DISLIKE, postId));
     }
 
-    public Reaction findByPostIdAndPersonId(UUID postId, UUID personId){
-        return repository.findByPostIdAndPersonId(postId, personId);
+    public ReactionDTO findUserReaction(UUID postId, UUID personId){
+        return mapper.toDto(repository.findByPostIdAndPersonId(postId, personId));
     }
 
-    public ReactionDTO create(UUID personId, ReactionDTO dto) throws Exception{
-        Reaction reaction = mapper.toEntity(dto);
+    public Boolean toggleReaction(UUID personId, ReactionDTO dto){
 
         Person person = personService.findOne(personId);
         if (person == null){
-            throw new Exception("User with given id doesn't exist!");
+            return Boolean.FALSE;
         }
-        reaction.setPerson(person);
 
         Post post = postService.findOne(dto.getPostId());
-        reaction.setPost(post);
-            
-        reaction = repository.save(reaction);
-        return mapper.toDto(reaction);
-    }
-
-    public ReactionDTO update(UUID personId, UUID postId) throws Exception{
-        Reaction reaction = repository.findByPostIdAndPersonId(postId, personId);
-        if (reaction == null){
-            throw new Exception("User hasn't left a reaction on this post!");
+        if (post == null){
+            return Boolean.FALSE;
         }
 
-        if (!reaction.getPerson().getId().equals(personId)){
-            throw new Exception("You can't change another user's reaction!");
+        // checks if user can leave a reaction
+        Person postPublisher = personService.findOne(post.getPerson().getId());
+        if (postPublisher.getBlockedBy().contains(person))
+        {
+            return Boolean.FALSE;
+        }
+        if (person.getBlockedBy().contains(postPublisher))
+        {
+            return Boolean.FALSE;
+        }
+        if (postPublisher.getPrivacy() == ProfilePrivacy.PRIVATE)
+        {
+            if (postPublisher.getId().compareTo(personId) != 0 && !postPublisher.getFollowers().contains(person))
+            {
+                return Boolean.FALSE;
+            }
         }
 
-        if (reaction.getType() == ReactionType.LIKE)
-            reaction.setType(ReactionType.DISLIKE);
+        // checks wheter to add, remove or change user's reaction
+        Reaction reaction = repository.findByPostIdAndPersonId(post.getId(), personId);
+        if (reaction == null)
+        {
+            reaction = mapper.toEntity(dto);
+            reaction.setPerson(person);
+            reaction.setPost(post);
+            reaction = repository.save(reaction);
+        }
+        else if (reaction.getType().name().equals(dto.getType()))
+        {
+            repository.deleteById(reaction.getId());
+        }
         else
-            reaction.setType(ReactionType.LIKE);
-
-        reaction = repository.save(reaction);
-        return mapper.toDto(reaction);
-    }
-
-    public void delete(UUID personId, UUID postId) throws Exception{
-        Reaction reaction = repository.findByPostIdAndPersonId(postId, personId);
-        if (reaction == null){
-            throw new Exception("User hasn't left a reaction on this post!");
+        {
+            reaction.setType(ReactionType.valueOf(dto.getType()));
+            reaction = repository.save(reaction);
         }
 
-        if (!reaction.getPerson().getId().equals(personId)){
-            throw new Exception("You can't remove another user's reaction!");
-        }
-
-        repository.deleteById(reaction.getId());
+        return Boolean.TRUE;
     }
     
 }
