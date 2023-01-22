@@ -83,7 +83,7 @@ public class PersonService {
         if (blockedPerson.getFollowers().contains(user))
         {
             Set<Person> followers = blockedPerson.getFollowers();
-            followers.remove(blockedPerson);
+            followers.remove(user);
             blockedPerson.setFollowers(followers);
             blockedPerson = repository.save(blockedPerson);
         }
