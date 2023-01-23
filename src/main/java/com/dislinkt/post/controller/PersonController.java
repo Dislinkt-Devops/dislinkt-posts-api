@@ -88,4 +88,15 @@ public class PersonController {
         ResponseDTO<Boolean> ret = new ResponseDTO<>(service.unblockPerson(id, blockedId));
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
+
+    @GetMapping("/myBlocked")
+    public ResponseEntity getMyBlockedUsers(@RequestHeader("X-User-Id") UUID id){
+        try{
+            ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.getBlockedList(id));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

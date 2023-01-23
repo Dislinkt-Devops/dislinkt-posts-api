@@ -1,5 +1,6 @@
 package com.dislinkt.post.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -117,6 +118,18 @@ public class PersonService {
         user = repository.save(user);
 
         return Boolean.TRUE;
+    }
+
+    public List<PersonDTO> getBlockedList(UUID id) throws Exception {
+        Person user = repository.findById(id).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        List<Person> ret = new ArrayList<>();
+        for (Person person : user.getBlocked()) {
+            ret.add(person);
+        }
+        return mapper.toDtoList(ret);
     }
     
 }
