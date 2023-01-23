@@ -77,6 +77,29 @@ public class PersonController {
         }
     }
 
+    @PutMapping("/block/{blockedId}")
+    public ResponseEntity<ResponseDTO<Boolean>> blockUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID blockedId){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.blockPerson(id, blockedId));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @PutMapping("/unblock/{blockedId}")
+    public ResponseEntity<ResponseDTO<Boolean>> unblockUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID blockedId){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.unblockPerson(id, blockedId));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @GetMapping("/myBlocked")
+    public ResponseEntity getMyBlockedUsers(@RequestHeader("X-User-Id") UUID id){
+        try{
+            ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.getBlockedList(id));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/myProfile")
     public ResponseEntity getMyProfile(@RequestHeader("X-User-Id") UUID id){
         try {
