@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.post.dto.PersonDTO;
+import com.dislinkt.post.enums.Gender;
+import com.dislinkt.post.enums.ProfilePrivacy;
 import com.dislinkt.post.mapper.PersonMapper;
 import com.dislinkt.post.model.Person;
 import com.dislinkt.post.repository.PersonRepository;
@@ -130,6 +134,31 @@ public class PersonService {
             ret.add(person);
         }
         return mapper.toDtoList(ret);
+
+    public PersonDTO getMyProfile(UUID id) throws Exception {
+        Person user = repository.findById(id).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        return mapper.toDto(user);
+    }
+
+    public PersonDTO editMyProfile(UUID id, PersonDTO dto) throws Exception {
+        Person user = repository.findById(id).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        user.setBio(dto.getBio());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setGender(Gender.valueOf(dto.getGender()));
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setPrivacy(ProfilePrivacy.valueOf(dto.getPrivacy()));
+
+        user = repository.save(user);
+
+        return mapper.toDto(user);
+
     }
     
 }
