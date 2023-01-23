@@ -82,4 +82,10 @@ public class PersonController {
         ResponseDTO<Boolean> ret = new ResponseDTO<>(service.blockPerson(id, blockedId));
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
+
+    @PutMapping("/unblock/{blockedId}")
+    public ResponseEntity<ResponseDTO<Boolean>> unblockUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID blockedId){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.unblockPerson(id, blockedId));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
 }

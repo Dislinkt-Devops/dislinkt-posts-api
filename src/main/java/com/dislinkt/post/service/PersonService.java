@@ -73,6 +73,9 @@ public class PersonService {
         if (blockedPerson == null)
             return Boolean.FALSE;
 
+        if (user.getBlocked().contains(blockedPerson))
+            return Boolean.FALSE;
+
         if (user.getFollowers().contains(blockedPerson))
         {
             Set<Person> followers = user.getFollowers();
@@ -90,6 +93,26 @@ public class PersonService {
 
         Set<Person> blockedList = user.getBlocked();
         blockedList.add(blockedPerson);
+        user.setBlocked(blockedList);
+        user = repository.save(user);
+
+        return Boolean.TRUE;
+    }
+
+    public Boolean unblockPerson(UUID id, UUID blockedId) {
+        Person user = findOne(id);
+        if (user == null)
+            return Boolean.FALSE;
+
+        Person blockedPerson = findOne(blockedId);
+        if (blockedPerson == null)
+            return Boolean.FALSE;
+
+        if (!user.getBlocked().contains(blockedPerson))
+            return Boolean.FALSE;
+
+        Set<Person> blockedList = user.getBlocked();
+        blockedList.remove(blockedPerson);
         user.setBlocked(blockedList);
         user = repository.save(user);
 
