@@ -88,8 +88,8 @@ public class PersonService {
         user.setPrivacy(ProfilePrivacy.valueOf(dto.getPrivacy()));
 
         user = repository.save(user);
-        
-        return null;
+
+        return mapper.toDto(user);
     }
     
 }
