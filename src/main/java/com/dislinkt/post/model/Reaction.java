@@ -1,5 +1,7 @@
 package com.dislinkt.post.model;
 
+import java.util.UUID;
+
 import javax.persistence.*;
 
 import com.dislinkt.post.enums.ReactionType;
@@ -8,8 +10,9 @@ import com.dislinkt.post.enums.ReactionType;
 public class Reaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(columnDefinition = "uuid")
+    @GeneratedValue(generator = "uuid")
+    private UUID id;
 
     @Column
     private ReactionType type;
@@ -47,7 +50,7 @@ public class Reaction {
     public Reaction() {
     }
 
-    public Reaction(Integer id, ReactionType type, Person person, Post post) {
+    public Reaction(UUID id, ReactionType type, Person person, Post post) {
         this.id = id;
         this.type = type;
         this.person = person;
@@ -58,11 +61,11 @@ public class Reaction {
         this.type = type;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
