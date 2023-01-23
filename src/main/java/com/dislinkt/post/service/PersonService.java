@@ -62,5 +62,13 @@ public class PersonService {
 
         return Boolean.TRUE;
     }
+
+    public PersonDTO getMyProfile(UUID id) throws Exception {
+        Person user = repository.findById(id).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        return mapper.toDto(user);
+    }
     
 }
