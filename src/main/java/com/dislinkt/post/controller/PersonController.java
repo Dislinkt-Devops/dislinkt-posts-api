@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +81,17 @@ public class PersonController {
     public ResponseEntity getMyProfile(@RequestHeader("X-User-Id") UUID id){
         try {
             ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.getMyProfile(id));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex) {
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value="/myProfile", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity editMyProfile(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody PersonDTO dto){
+        try {
+            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.editMyProfile(id, dto));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch (Exception ex) {
             ErrorDTO error = new ErrorDTO(ex.getMessage());
