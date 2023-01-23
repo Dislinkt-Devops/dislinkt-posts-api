@@ -95,6 +95,10 @@ public class PersonController {
             ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.getBlockedList(id));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/myProfile")
     public ResponseEntity getMyProfile(@RequestHeader("X-User-Id") UUID id){

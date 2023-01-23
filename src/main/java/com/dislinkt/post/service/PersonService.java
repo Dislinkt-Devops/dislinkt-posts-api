@@ -134,6 +134,7 @@ public class PersonService {
             ret.add(person);
         }
         return mapper.toDtoList(ret);
+    }
 
     public PersonDTO getMyProfile(UUID id) throws Exception {
         Person user = repository.findById(id).orElse(null);
