@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.dislinkt.post.dto.PersonDTO;
 import com.dislinkt.post.enums.Gender;
@@ -22,6 +22,9 @@ public class PersonService {
 
     @Autowired
     private PersonRepository repository;
+
+    @Autowired
+    private HttpService httpService;
 
     private PersonMapper mapper = new PersonMapper();
 
@@ -40,6 +43,7 @@ public class PersonService {
         return null;
     }
 
+    @Transactional(rollbackFor = { HttpClientErrorException.class })
     public PersonDTO create(UUID id, PersonDTO dto) throws Exception{
         Person person = mapper.toEntity(dto);
         person.setId(id);
@@ -48,6 +52,9 @@ public class PersonService {
             throw new Exception("User with given id already exists!");
 
         person = repository.save(person);
+
+        httpService.activateUser(id);
+
         return mapper.toDto(person);
     }
 
@@ -160,6 +167,17 @@ public class PersonService {
 
         return mapper.toDto(user);
 
+    }
+
+    public List<PersonDTO> searchPublicProfiles(String keyword) {
+        if (keyword.isBlank()) {
+            return new ArrayList<PersonDTO>();
+        }
+        
+        List<UUID> userIds = this.httpService.getUserIdsByUsername(keyword); 
+
+        return mapper.toDtoList(repository
+            .findProfilesByAllNameTypes(keyword, userIds));
     }
     
 }

@@ -40,7 +40,7 @@ public class PostController {
     }
 
     @GetMapping("/{personId}")
-    public ResponseEntity findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID personId){
+    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID personId){
         try{
             List<PostDTO> ret = service.findByPersonId(userId, personId);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -52,7 +52,7 @@ public class PostController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addPost(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody PostDTO dto){
+    public ResponseEntity<?> addPost(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody PostDTO dto){
         try{
             PostDTO ret = service.create(personId, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -64,7 +64,7 @@ public class PostController {
     }
 
     @PutMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity editPost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody PostDTO dto){
+    public ResponseEntity<?> editPost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody PostDTO dto){
         try{
             PostDTO ret = service.update(personId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -76,7 +76,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletePost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
+    public ResponseEntity<?> deletePost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
         try{
             service.delete(personId, id);
             return new ResponseEntity<>(HttpStatus.OK);
