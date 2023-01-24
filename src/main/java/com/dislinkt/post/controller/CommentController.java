@@ -61,7 +61,7 @@ public class CommentController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addComment(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody CommentDTO dto){
+    public ResponseEntity<?> addComment(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody CommentDTO dto){
         try{
             CommentDTO ret = service.create(personId, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -73,7 +73,7 @@ public class CommentController {
     }
 
     @PutMapping(value="/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity editComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody CommentDTO dto){
+    public ResponseEntity<?> editComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody CommentDTO dto){
         try{
             CommentDTO ret = service.update(personId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -85,7 +85,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
+    public ResponseEntity<?> deleteComment(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
         try{
             service.delete(personId, id);
             return new ResponseEntity<>(HttpStatus.OK);
