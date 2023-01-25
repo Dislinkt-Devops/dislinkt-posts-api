@@ -1,11 +1,14 @@
 package com.dislinkt.post.model;
 
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.*;
+
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 public class Post {
@@ -33,6 +36,10 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
 
     public String getText() {
         return text;
@@ -101,5 +108,12 @@ public class Post {
     public void setId(UUID id) {
         this.id = id;
     }
-    
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }

@@ -1,5 +1,6 @@
 package com.dislinkt.post.dto;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,16 @@ public class PostDTO {
     private List<CommentDTO> comments;
 
     private List<ReactionDTO> reactions;
+
+    private Date createdAt;
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public UUID getId() {
         return id;
