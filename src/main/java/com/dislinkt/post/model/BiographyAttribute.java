@@ -1,19 +1,27 @@
 package com.dislinkt.post.model;
 
+import java.util.UUID;
+
 import javax.persistence.*;
+
+import com.dislinkt.post.enums.BiographyAttributeType;
 
 @Entity
 public class BiographyAttribute {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(columnDefinition = "uuid")
+    @GeneratedValue(generator = "uuid")
+    private UUID id;
 
     @Column(name = "attribute_name")
     private String attributeName;
 
     @Column(name = "attribute_value")
     private String attributeValue;
+
+    @Column(name = "attribute_type")
+    private BiographyAttributeType attributeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
@@ -45,19 +53,26 @@ public class BiographyAttribute {
     public BiographyAttribute() {
     }
 
-    public BiographyAttribute(Integer id, String attributeName, String attributeValue, Person person) {
-        this.id = id;
+    public BiographyAttribute(BiographyAttributeType attributeType, String attributeName, String attributeValue) {
+        this.attributeType = attributeType;
         this.attributeName = attributeName;
         this.attributeValue = attributeValue;
-        this.person = person;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public BiographyAttributeType getAttributeType() {
+        return attributeType;
+    }
+
+    public void setAttributeType(BiographyAttributeType attributeType) {
+        this.attributeType = attributeType;
     }
     
 }

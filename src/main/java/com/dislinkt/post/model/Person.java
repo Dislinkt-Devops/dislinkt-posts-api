@@ -191,14 +191,15 @@ public class Person {
     }
 
     public Person(String firstName, String lastName, Gender gender, String phoneNumber, Date dateOfBirth,
-            ProfilePrivacy privacy) {
+            String bio,ProfilePrivacy privacy) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
         this.privacy = privacy;
-        this.bio = "";
+        this.dateOfBirth = dateOfBirth;
+        this.bio = bio;
         this.biographyAttributes = new HashSet<>();
         this.comments = new HashSet<>();
         this.posts = new HashSet<>();

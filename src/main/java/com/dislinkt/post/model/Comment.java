@@ -1,8 +1,11 @@
 package com.dislinkt.post.model;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Comment {
@@ -20,6 +23,10 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
 
     public UUID getId() {
         return id;
@@ -67,4 +74,11 @@ public class Comment {
         this.text = text;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }

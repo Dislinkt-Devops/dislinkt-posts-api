@@ -28,6 +28,10 @@ public class PostService {
         return mapper.toDtoList(repository.findAll());
     }
 
+    public List<PostDTO> findAllByViewer(UUID userId) throws Exception {
+        return mapper.toDtoList(repository.findAllByViewer(userId));
+    }
+
     public List<PostDTO> findByPersonId(UUID userId, UUID postPublisherId) throws Exception{
         if (personService.findOne(userId) == null){
             throw new Exception("User with given id doesn't exist!");

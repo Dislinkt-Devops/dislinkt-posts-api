@@ -1,5 +1,6 @@
 package com.dislinkt.post.dto;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,8 @@ public class CommentDTO {
     private UUID personId;
 
     private UUID postId;
+    
+    private Date createdAt;
 
     public UUID getId() {
         return id;
@@ -45,6 +48,14 @@ public class CommentDTO {
 
     public void setPostId(UUID postId) {
         this.postId = postId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public CommentDTO() {

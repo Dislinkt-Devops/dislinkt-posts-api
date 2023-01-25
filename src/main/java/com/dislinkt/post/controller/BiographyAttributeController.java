@@ -1,5 +1,6 @@
 package com.dislinkt.post.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,49 +21,37 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dislinkt.post.service.PostService;
+import com.dislinkt.post.dto.BiographyAttributeDTO;
 import com.dislinkt.post.dto.ErrorDTO;
-import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.dto.ResponseDTO;
+import com.dislinkt.post.service.BiographyAttributeService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/posts")
-public class PostController {
+@RequestMapping("/attributes")
+public class BiographyAttributeController {
 
     @Autowired
-    private PostService service;
+    private BiographyAttributeService service;
 
-    @GetMapping("feed")
-    public ResponseEntity<?> getAll(@RequestHeader(value = "X-User-Id", required = false) UUID userId) {
-        try {
-            List<PostDTO> ret = service.findAllByViewer(userId);
-            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            ErrorDTO error = new ErrorDTO(ex.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public List<ErrorDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<ErrorDTO> ret = new ArrayList<ErrorDTO>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            ErrorDTO dto = new ErrorDTO(error.getDefaultMessage());
+            ret.add(dto);
+        });
+        return ret;
     }
-
-    @GetMapping("/{personId}")
-    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID personId){
-        try{
-            List<PostDTO> ret = service.findByPersonId(userId, personId);
-            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            ErrorDTO error = new ErrorDTO(ex.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-    }
-
+    
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addPost(@RequestHeader("X-User-Id") UUID personId, @Valid @RequestBody PostDTO dto){
+    public ResponseEntity<?> addAttribute(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
         try{
-            PostDTO ret = service.create(personId, dto);
+            BiographyAttributeDTO ret = service.create(id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
         }
         catch (Exception ex){
@@ -69,10 +60,22 @@ public class PostController {
         }
     }
 
-    @PutMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editPost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id, @Valid @RequestBody PostDTO dto){
+    @GetMapping("/{biographyOwnerId}")
+    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID biographyOwnerId){
         try{
-            PostDTO ret = service.update(personId, id, dto);
+            List<BiographyAttributeDTO> ret = service.findByUser(userId, biographyOwnerId);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editAttribute(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
+        try{
+            BiographyAttributeDTO ret = service.update(userId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
         }
         catch (Exception ex){
@@ -82,9 +85,9 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@RequestHeader("X-User-Id") UUID personId, @PathVariable UUID id){
+    public ResponseEntity<?> deleteAttribute(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID id){
         try{
-            service.delete(personId, id);
+            service.delete(userId, id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception ex){
