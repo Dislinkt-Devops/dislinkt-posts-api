@@ -77,6 +77,9 @@ public class PersonService {
     }
 
     public Boolean blockPerson(UUID id, UUID blockedId){
+        if (id.equals(blockedId))
+            return Boolean.FALSE;
+
         Person user = findOne(id);
         if (user == null)
             return Boolean.FALSE;
@@ -112,6 +115,9 @@ public class PersonService {
     }
 
     public Boolean unblockPerson(UUID id, UUID blockedId) {
+        if (id.equals(blockedId))
+            return Boolean.FALSE;
+        
         Person user = findOne(id);
         if (user == null)
             return Boolean.FALSE;
