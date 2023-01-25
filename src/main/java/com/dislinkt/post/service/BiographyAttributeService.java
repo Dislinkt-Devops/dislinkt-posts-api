@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.post.dto.BiographyAttributeDTO;
+import com.dislinkt.post.enums.BiographyAttributeType;
 import com.dislinkt.post.enums.ProfilePrivacy;
 import com.dislinkt.post.mapper.BiographyAttributeMapper;
 import com.dislinkt.post.model.BiographyAttribute;
@@ -24,10 +25,10 @@ public class BiographyAttributeService {
 
     private BiographyAttributeMapper mapper = new BiographyAttributeMapper();
 
-    public BiographyAttributeDTO create(UUID personId, BiographyAttributeDTO dto) throws Exception{
+    public BiographyAttributeDTO create(UUID userId, BiographyAttributeDTO dto) throws Exception{
         BiographyAttribute bAttribute = mapper.toEntity(dto);
 
-        Person person = personService.findOne(personId);
+        Person person = personService.findOne(userId);
         if (person == null)
             throw new Exception("User with given id doesn't exist!");
         bAttribute.setPerson(person);
@@ -41,7 +42,7 @@ public class BiographyAttributeService {
         if (personService.findOne(userId) == null)
             throw new Exception("User with given id doesn't exist!");
         if (personService.findOne(biographyOwnerId) == null)
-            throw new Exception("User with given id doesn't exist!");
+            throw new Exception("Owner with given id doesn't exist!");
 
         boolean isOwner = userId.compareTo(biographyOwnerId) == 0;
         Person user = personService.findOne(userId);
@@ -58,6 +59,26 @@ public class BiographyAttributeService {
             return mapper.toDtoList(repository.findByPersonId(biographyOwnerId));
         else
             throw new Exception("You cannot view this user's posts!");    
+    }
+
+    public BiographyAttributeDTO update(UUID userId, UUID attributeId, BiographyAttributeDTO dto) throws Exception{
+        if (personService.findOne(userId) == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        BiographyAttribute bAttribute = repository.findById(attributeId).orElse(null);
+        if (bAttribute == null)
+            throw new Exception("Biography attribute with given id doesn't exist!");
+
+        if (!bAttribute.getPerson().getId().equals(userId))
+            throw new Exception("You can't edit this user's biography attributes!");
+
+        bAttribute.setAttributeName(dto.getAttributeName());
+        bAttribute.setAttributeType(BiographyAttributeType.valueOf(dto.getAttributeType()));
+        bAttribute.setAttributeValue(dto.getAttributeValue());
+
+        bAttribute = repository.save(bAttribute);
+
+        return mapper.toDto(bAttribute);
     }
     
 }

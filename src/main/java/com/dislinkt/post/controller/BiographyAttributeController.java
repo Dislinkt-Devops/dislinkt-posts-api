@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dislinkt.post.dto.BiographyAttributeDTO;
 import com.dislinkt.post.dto.ErrorDTO;
-import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.dto.ResponseDTO;
 import com.dislinkt.post.service.BiographyAttributeService;
 
@@ -48,7 +48,7 @@ public class BiographyAttributeController {
     }
     
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addPerson(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
+    public ResponseEntity<?> addAttribute(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
         try{
             BiographyAttributeDTO ret = service.create(id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
@@ -63,6 +63,18 @@ public class BiographyAttributeController {
     public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID biographyOwnerId){
         try{
             List<BiographyAttributeDTO> ret = service.findByUser(userId, biographyOwnerId);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editAttribute(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
+        try{
+            BiographyAttributeDTO ret = service.update(userId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
         }
         catch (Exception ex){
