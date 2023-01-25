@@ -1,6 +1,6 @@
 package com.dislinkt.post.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Post {
@@ -37,7 +37,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Date createdAt;
 

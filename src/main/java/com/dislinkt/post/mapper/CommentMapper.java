@@ -22,11 +22,13 @@ public class CommentMapper implements MapperInterface<Comment, CommentDTO>{
 
     @Override
     public CommentDTO toDto(Comment entity) {
-        return new CommentDTO(
+        CommentDTO dto = new CommentDTO(
             entity.getId(), 
             entity.getText(), 
             entity.getPerson().getId(),
             entity.getPost().getId());
+        dto.setCreatedAt(entity.getCreatedAt());
+        return dto;
     }
 
     @Override
