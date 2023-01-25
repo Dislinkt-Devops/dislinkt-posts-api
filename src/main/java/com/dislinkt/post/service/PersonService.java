@@ -162,6 +162,7 @@ public class PersonService {
         user.setGender(Gender.valueOf(dto.getGender()));
         user.setPhoneNumber(dto.getPhoneNumber());
         user.setPrivacy(ProfilePrivacy.valueOf(dto.getPrivacy()));
+        user.setDateOfBirth(dto.getDateOfBirth());
 
         user = repository.save(user);
 
