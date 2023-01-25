@@ -134,6 +134,17 @@ public class PersonController {
         }
     }
 
+    @GetMapping("/profile/{searchedId}")
+    public ResponseEntity<?> getProfile(@RequestHeader(value = "X-User-Id", required = false) UUID userId, @PathVariable UUID searchedId){
+        try {
+            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.getProfile(userId, searchedId));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex) {
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping(value="/myProfile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editMyProfile(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody PersonDTO dto){
         try {

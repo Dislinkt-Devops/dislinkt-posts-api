@@ -39,26 +39,36 @@ public class BiographyAttributeService {
     }
 
     public List<BiographyAttributeDTO> findByUser(UUID userId, UUID biographyOwnerId) throws Exception {
-        if (personService.findOne(userId) == null)
-            throw new Exception("User with given id doesn't exist!");
         if (personService.findOne(biographyOwnerId) == null)
             throw new Exception("Owner with given id doesn't exist!");
-
-        boolean isOwner = userId.compareTo(biographyOwnerId) == 0;
-        Person user = personService.findOne(userId);
         Person biographyOwner = personService.findOne(biographyOwnerId);
+
+        boolean isPublic = biographyOwner.getPrivacy() == ProfilePrivacy.PUBLIC;
+
+        if (userId == null){
+            if (biographyOwner.getPrivacy() == ProfilePrivacy.PUBLIC)
+                return mapper.toDtoList(repository.findByPersonId(biographyOwnerId));
+            else
+                throw new Exception("You cannot view this user's biography!"); 
+        }
+
+        boolean isOwner = userId.equals(biographyOwnerId);
+
+        Person user = personService.findOne(userId);
+        if (personService.findOne(userId) == null)
+            throw new Exception("User with given id doesn't exist!");
 
         if (user.getBlockedBy().contains(biographyOwner))
             throw new Exception("This user has you blocked!");
         if (biographyOwner.getBlockedBy().contains(user))
             throw new Exception("You have blocked this user!");
 
-        boolean isPublic = biographyOwner.getPrivacy() == ProfilePrivacy.PUBLIC;
         boolean isFollowing = user.getFollowing().contains(biographyOwner);
+        
         if (isOwner || isPublic || isFollowing)
             return mapper.toDtoList(repository.findByPersonId(biographyOwnerId));
         else
-            throw new Exception("You cannot view this user's posts!");    
+            throw new Exception("You cannot view this user's biography!");    
     }
 
     public BiographyAttributeDTO update(UUID userId, UUID attributeId, BiographyAttributeDTO dto) throws Exception{

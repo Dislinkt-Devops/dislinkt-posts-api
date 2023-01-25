@@ -61,7 +61,7 @@ public class BiographyAttributeController {
     }
 
     @GetMapping("/{biographyOwnerId}")
-    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID biographyOwnerId){
+    public ResponseEntity<?> findByPerson(@RequestHeader(value = "X-User-Id", required = false) UUID userId, @PathVariable UUID biographyOwnerId){
         try{
             List<BiographyAttributeDTO> ret = service.findByUser(userId, biographyOwnerId);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);

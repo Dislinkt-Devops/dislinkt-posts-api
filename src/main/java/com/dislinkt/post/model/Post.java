@@ -28,10 +28,10 @@ public class Post {
     @CollectionTable(name="links")
     private List<String> links;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "post")
     private Set<Comment> comments;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "post")
     private Set<Reaction> reactions;
 
     @ManyToOne(fetch = FetchType.LAZY)

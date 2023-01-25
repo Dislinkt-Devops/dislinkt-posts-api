@@ -34,14 +34,7 @@ public class PersonService {
     }
 
     public Person findOne(UUID id){
-        for (Person person: repository.findAll()){
-
-            if (person.getId().equals(id))
-                return person;
-
-        }
-
-        return null;
+        return repository.findById(id).orElse(null);
     }
 
     @Transactional(rollbackFor = { HttpClientErrorException.class })
@@ -211,6 +204,39 @@ public class PersonService {
             throw new Exception("User with given id doesn't exist!");
 
         return mapper.toDto(user);
+    }
+
+    public PersonDTO getProfile(UUID userId, UUID searchedId) throws Exception {
+        Person searched = this.findOne(searchedId);
+        if (searched == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        boolean isPublic = searched.getPrivacy() == ProfilePrivacy.PUBLIC;
+        
+        if (userId == null){
+            if (isPublic)
+                return mapper.toDto(searched);
+            else
+                throw new Exception("You cannot view this user's profile!");
+        }
+
+        boolean isOwner = userId.equals(searchedId);
+
+        Person user = repository.findById(userId).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        if (user.getBlockedBy().contains(searched))
+            throw new Exception("This user has you blocked!");
+        if (searched.getBlockedBy().contains(user))
+            throw new Exception("You have blocked this user!");
+
+        boolean isFollowing = user.getFollowing().contains(searched);
+
+        if (isOwner || isPublic || isFollowing)
+            return mapper.toDto(searched);
+        else
+            throw new Exception("You cannot view this user's profile!");
     }
 
     public PersonDTO editMyProfile(UUID id, PersonDTO dto) throws Exception {
