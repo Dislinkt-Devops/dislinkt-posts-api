@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dislinkt.post.dto.BiographyAttributeDTO;
 import com.dislinkt.post.dto.ErrorDTO;
+import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.dto.ResponseDTO;
 import com.dislinkt.post.service.BiographyAttributeService;
 
@@ -48,6 +51,18 @@ public class BiographyAttributeController {
     public ResponseEntity<?> addPerson(@RequestHeader("X-User-Id") UUID id, @Valid @RequestBody BiographyAttributeDTO dto){
         try{
             BiographyAttributeDTO ret = service.create(id, dto);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{biographyOwnerId}")
+    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID biographyOwnerId){
+        try{
+            List<BiographyAttributeDTO> ret = service.findByUser(userId, biographyOwnerId);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
         }
         catch (Exception ex){
