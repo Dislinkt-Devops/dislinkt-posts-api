@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,61 @@ public class PersonService {
 
         if (sender.getBlockedBy().contains(receiver) || receiver.getBlockedBy().contains(sender))
             return Boolean.FALSE;
+
+        return Boolean.TRUE;
+    }
+
+    public List<PersonDTO> getFollowing(UUID id) throws Exception {
+        Person user = findOne(id);
+        if (user == null)
+            throw new Exception("user with given id doesn't exist");
+
+        List<Person> following = user.getFollowing().stream()
+                .filter(person -> person.getPrivacy() == ProfilePrivacy.PUBLIC || person.getFollowing().contains(user))
+                .collect(Collectors.toList());
+
+        return mapper.toDtoList(following);
+    }
+
+    public Boolean followPerson(UUID id, UUID idToFollow) {
+        Person user = findOne(id);
+        Person userToFollow = findOne(idToFollow);
+
+        if (user == null || userToFollow == null)
+            return Boolean.FALSE;
+
+        if (user.getFollowing().contains(userToFollow))
+            return Boolean.FALSE;
+
+        if (user.getBlocked().contains(userToFollow) || userToFollow.getBlocked().contains(user))
+            return Boolean.FALSE;
+
+        if (userToFollow.getPrivacy() == ProfilePrivacy.PUBLIC) {
+            user.getFollowers().add(userToFollow);
+        }
+
+        user.getFollowing().add(userToFollow);
+        repository.save(user);
+
+        return Boolean.TRUE;
+    }
+
+    public Boolean unfollowPerson(UUID id, UUID idToUnfollow) {
+        Person user = findOne(id);
+        Person userToFollow = findOne(idToUnfollow);
+
+        if (user == null || userToFollow == null)
+            return Boolean.FALSE;
+
+        if (!user.getFollowing().contains(userToFollow))
+            return Boolean.FALSE;
+
+        if (user.getBlocked().contains(userToFollow) || userToFollow.getBlocked().contains(user))
+            return Boolean.FALSE;
+
+        user.getFollowers().remove(userToFollow);
+        user.getFollowing().remove(userToFollow);
+        repository.save(user);
 
         return Boolean.TRUE;
     }
