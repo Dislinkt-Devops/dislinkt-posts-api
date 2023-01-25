@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,6 +77,18 @@ public class BiographyAttributeController {
         try{
             BiographyAttributeDTO ret = service.update(userId, id, dto);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAttribute(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID id){
+        try{
+            service.delete(userId, id);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception ex){
             ErrorDTO error = new ErrorDTO(ex.getMessage());

@@ -80,5 +80,19 @@ public class BiographyAttributeService {
 
         return mapper.toDto(bAttribute);
     }
+
+    public void delete(UUID userId, UUID attributeId) throws Exception{
+        if (personService.findOne(userId) == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        BiographyAttribute bAttribute = repository.findById(attributeId).orElse(null);
+        if (bAttribute == null)
+            throw new Exception("Biography attribute with given id doesn't exist!");
+
+        if (!bAttribute.getPerson().getId().equals(userId))
+            throw new Exception("You can't delete this user's biography attributes!");
+
+        repository.deleteById(attributeId);
+    }
     
 }
