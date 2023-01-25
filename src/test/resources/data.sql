@@ -20,12 +20,12 @@ insert into followers (follower_id, followed_id) values
 insert into blocking (blocker_id, blocked_id) values
     ('2C20B8C0469311EBB3780242AC130005', '2C20B8C0469311EBB3780242AC130002');
 
-insert into post (id, text, image_url, person_id) values
-    ('599703C2976311EDA8FC0242AC120002', 'this is a text', 'img1', '2C20B8C0469311EBB3780242AC130002'),
-    ('599703C2976311EDA8FC0242AC120003', 'this is a text also', 'img2', '2C20B8C0469311EBB3780242AC130003'),
-    ('599703C2976311EDA8FC0242AC120004', 'this is a text also also', 'img3', '2C20B8C0469311EBB3780242AC130002'),
-    ('599703C2976311EDA8FC0242AC120005', 'this is a text also also also', 'img4', '2C20B8C0469311EBB3780242AC130004'),
-    ('599703C2976311EDA8FC0242AC120006', 'this is a deletion post', 'img99', '2C20B8C0469311EBB3780242AC130005');
+insert into post (id, text, image_url, person_id, created_at) values
+    ('599703C2976311EDA8FC0242AC120002', 'this is a text', 'img1', '2C20B8C0469311EBB3780242AC130002', CURRENT_DATE()),
+    ('599703C2976311EDA8FC0242AC120003', 'this is a text also', 'img2', '2C20B8C0469311EBB3780242AC130003', CURRENT_DATE()),
+    ('599703C2976311EDA8FC0242AC120004', 'this is a text also also', 'img3', '2C20B8C0469311EBB3780242AC130002', CURRENT_DATE()),
+    ('599703C2976311EDA8FC0242AC120005', 'this is a text also also also', 'img4', '2C20B8C0469311EBB3780242AC130004', CURRENT_DATE()),
+    ('599703C2976311EDA8FC0242AC120006', 'this is a deletion post', 'img99', '2C20B8C0469311EBB3780242AC130005', CURRENT_DATE());
     
 insert into links (post_id, links) values 
     ('599703C2976311EDA8FC0242AC120002', 'link1'), 

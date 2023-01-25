@@ -1,12 +1,16 @@
 package com.dislinkt.post.mapper;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.model.Post;
 
 public class PostMapper implements MapperInterface<Post, PostDTO> {
+
+    private CommentMapper commentMapper = new CommentMapper();
+    private ReactionMapper reactionMapper = new ReactionMapper();
 
     @Override
     public Post toEntity(PostDTO dto) {
@@ -24,12 +28,16 @@ public class PostMapper implements MapperInterface<Post, PostDTO> {
 
     @Override
     public PostDTO toDto(Post entity) {
-        return new PostDTO(
+         PostDTO dto = new PostDTO(
             entity.getId(), 
             entity.getText(), 
             entity.getImageUrl(), 
             entity.getLinks(), 
             entity.getPerson().getId().toString());
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setComments(commentMapper.toDtoList(new ArrayList<>(entity.getComments())));
+        dto.setReactions(reactionMapper.toDtoList(new ArrayList<>(entity.getReactions())));
+        return dto;
     }
 
     @Override
