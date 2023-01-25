@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,7 @@ public class PersonService {
     }
 
     public Person findOne(UUID id){
-        for (Person person: repository.findAll()){
-
-            if (person.getId().equals(id))
-                return person;
-
-        }
-
-        return null;
+        return repository.findById(id).orElse(null);
     }
 
     @Transactional(rollbackFor = { HttpClientErrorException.class })
@@ -72,6 +66,61 @@ public class PersonService {
 
         if (sender.getBlockedBy().contains(receiver) || receiver.getBlockedBy().contains(sender))
             return Boolean.FALSE;
+
+        return Boolean.TRUE;
+    }
+
+    public List<PersonDTO> getFollowing(UUID id) throws Exception {
+        Person user = findOne(id);
+        if (user == null)
+            throw new Exception("user with given id doesn't exist");
+
+        List<Person> following = user.getFollowing().stream()
+                .filter(person -> person.getPrivacy() == ProfilePrivacy.PUBLIC || person.getFollowing().contains(user))
+                .collect(Collectors.toList());
+
+        return mapper.toDtoList(following);
+    }
+
+    public Boolean followPerson(UUID id, UUID idToFollow) {
+        Person user = findOne(id);
+        Person userToFollow = findOne(idToFollow);
+
+        if (user == null || userToFollow == null)
+            return Boolean.FALSE;
+
+        if (user.getFollowing().contains(userToFollow))
+            return Boolean.FALSE;
+
+        if (user.getBlocked().contains(userToFollow) || userToFollow.getBlocked().contains(user))
+            return Boolean.FALSE;
+
+        if (userToFollow.getPrivacy() == ProfilePrivacy.PUBLIC) {
+            user.getFollowers().add(userToFollow);
+        }
+
+        user.getFollowing().add(userToFollow);
+        repository.save(user);
+
+        return Boolean.TRUE;
+    }
+
+    public Boolean unfollowPerson(UUID id, UUID idToUnfollow) {
+        Person user = findOne(id);
+        Person userToFollow = findOne(idToUnfollow);
+
+        if (user == null || userToFollow == null)
+            return Boolean.FALSE;
+
+        if (!user.getFollowing().contains(userToFollow))
+            return Boolean.FALSE;
+
+        if (user.getBlocked().contains(userToFollow) || userToFollow.getBlocked().contains(user))
+            return Boolean.FALSE;
+
+        user.getFollowers().remove(userToFollow);
+        user.getFollowing().remove(userToFollow);
+        repository.save(user);
 
         return Boolean.TRUE;
     }
@@ -155,6 +204,39 @@ public class PersonService {
             throw new Exception("User with given id doesn't exist!");
 
         return mapper.toDto(user);
+    }
+
+    public PersonDTO getProfile(UUID userId, UUID searchedId) throws Exception {
+        Person searched = this.findOne(searchedId);
+        if (searched == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        boolean isPublic = searched.getPrivacy() == ProfilePrivacy.PUBLIC;
+        
+        if (userId == null){
+            if (isPublic)
+                return mapper.toDto(searched);
+            else
+                throw new Exception("You cannot view this user's profile!");
+        }
+
+        boolean isOwner = userId.equals(searchedId);
+
+        Person user = repository.findById(userId).orElse(null);
+        if (user == null)
+            throw new Exception("User with given id doesn't exist!");
+
+        if (user.getBlockedBy().contains(searched))
+            throw new Exception("This user has you blocked!");
+        if (searched.getBlockedBy().contains(user))
+            throw new Exception("You have blocked this user!");
+
+        boolean isFollowing = user.getFollowing().contains(searched);
+
+        if (isOwner || isPublic || isFollowing)
+            return mapper.toDto(searched);
+        else
+            throw new Exception("You cannot view this user's profile!");
     }
 
     public PersonDTO editMyProfile(UUID id, PersonDTO dto) throws Exception {

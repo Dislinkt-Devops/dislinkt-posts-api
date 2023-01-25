@@ -77,6 +77,29 @@ public class PersonController {
         }
     }
 
+    @GetMapping("/following")
+    public ResponseEntity<?> getFollowing(@RequestHeader("X-User-Id") UUID id){
+        try {
+            ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.getFollowing(id));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex) {
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/follow/{idToFollow}")
+    public ResponseEntity<ResponseDTO<Boolean>> followUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID idToFollow){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.followPerson(id, idToFollow));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @PutMapping("/unfollow/{idToUnfollow}")
+    public ResponseEntity<ResponseDTO<Boolean>> unfollowUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID idToUnfollow){
+        ResponseDTO<Boolean> ret = new ResponseDTO<>(service.unfollowPerson(id, idToUnfollow));
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
     @PutMapping("/block/{blockedId}")
     public ResponseEntity<ResponseDTO<Boolean>> blockUser(@RequestHeader("X-User-Id") UUID id, @PathVariable UUID blockedId){
         ResponseDTO<Boolean> ret = new ResponseDTO<>(service.blockPerson(id, blockedId));
@@ -104,6 +127,17 @@ public class PersonController {
     public ResponseEntity<?> getMyProfile(@RequestHeader("X-User-Id") UUID id){
         try {
             ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.getMyProfile(id));
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception ex) {
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/profile/{searchedId}")
+    public ResponseEntity<?> getProfile(@RequestHeader(value = "X-User-Id", required = false) UUID userId, @PathVariable UUID searchedId){
+        try {
+            ResponseDTO<PersonDTO> ret = new ResponseDTO<>(service.getProfile(userId, searchedId));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch (Exception ex) {
             ErrorDTO error = new ErrorDTO(ex.getMessage());
