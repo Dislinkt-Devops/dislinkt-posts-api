@@ -33,10 +33,16 @@ public class PostController {
     @Autowired
     private PostService service;
 
-    @GetMapping()
-    public ResponseEntity<ResponseDTO<List<PostDTO>>> getAll(){
-        List<PostDTO> ret = service.findAll();
-        return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+    @GetMapping("feed")
+    public ResponseEntity<?> getAll(@RequestHeader(value = "X-User-Id", required = false) UUID userId) {
+        try {
+            List<PostDTO> ret = service.findAllByViewer(userId);
+            return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            ErrorDTO error = new ErrorDTO(ex.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{personId}")
