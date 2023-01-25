@@ -151,7 +151,7 @@ public class PersonService {
     }
 
     public PersonDTO getProfile(UUID userId, UUID searchedId) throws Exception {
-        Person searched = repository.findById(searchedId).orElse(null);
+        Person searched = this.findOne(searchedId);
         if (searched == null)
             throw new Exception("User with given id doesn't exist!");
 
