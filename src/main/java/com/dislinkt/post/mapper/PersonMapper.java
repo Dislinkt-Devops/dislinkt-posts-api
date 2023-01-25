@@ -1,5 +1,8 @@
 package com.dislinkt.post.mapper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ public class PersonMapper implements MapperInterface<Person, PersonDTO> {
             Gender.valueOf(dto.getGender()),
             dto.getPhoneNumber(),
             dto.getDateOfBirth(),
+            dto.getBio(),
             ProfilePrivacy.valueOf(dto.getPrivacy()));
     }
 
