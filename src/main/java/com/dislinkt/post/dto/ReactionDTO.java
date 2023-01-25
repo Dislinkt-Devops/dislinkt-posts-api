@@ -12,6 +12,16 @@ public class ReactionDTO {
 
     private UUID postId;
 
+    private PersonInfo personInfo;
+
+    public PersonInfo getPersonInfo() {
+        return personInfo;
+    }
+
+    public void setPersonInfo(PersonInfo personInfo) {
+        this.personInfo = personInfo;
+    }
+
     public UUID getId() {
         return id;
     }

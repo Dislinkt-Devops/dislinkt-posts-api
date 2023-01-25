@@ -16,11 +16,21 @@ public class PostDTO {
 
     private String personId;
 
+    private PersonInfo personInfo;
+
     private List<CommentDTO> comments;
 
     private List<ReactionDTO> reactions;
 
     private Date createdAt;
+
+    public PersonInfo getPersonInfo() {
+        return personInfo;
+    }
+
+    public void setPersonInfo(PersonInfo personInfo) {
+        this.personInfo = personInfo;
+    }
 
     public Date getCreatedAt() {
         return createdAt;
