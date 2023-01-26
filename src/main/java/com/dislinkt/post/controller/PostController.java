@@ -45,8 +45,8 @@ public class PostController {
         }
     }
 
-    @GetMapping("/{personId}")
-    public ResponseEntity<?> findByPerson(@RequestHeader("X-User-Id") UUID userId, @PathVariable UUID personId){
+    @GetMapping("/profile/{personId}")
+    public ResponseEntity<?> findByPerson(@RequestHeader(value = "X-User-Id", required = false) UUID userId, @PathVariable UUID personId){
         try{
             List<PostDTO> ret = service.findByPersonId(userId, personId);
             return new ResponseEntity<>(new ResponseDTO<>(ret), HttpStatus.OK);

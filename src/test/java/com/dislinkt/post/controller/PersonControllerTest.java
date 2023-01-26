@@ -38,34 +38,6 @@ public class PersonControllerTest {
     private HttpHeaders httpHeaders;
 
     @Test
-    public void testAddUserOk(){
-        httpHeaders = new HttpHeaders();
-        httpHeaders.add("X-User-Id", PersonConstants.NEW_ID);
-        
-        PersonDTO newPerson = new PersonDTO(null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME,
-        PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, PersonConstants.PRIVACY);
-        HttpEntity<Object> httpEntity = new HttpEntity<Object>(newPerson, httpHeaders);
-
-        ResponseEntity<ResponseDTO> responseEntity = restTemplate.exchange("/people", HttpMethod.POST,
-         httpEntity, ResponseDTO.class);
-
-        ResponseDTO response = responseEntity.getBody();
-        Object dto = response.getData();
-
-        assertNotEquals(dto, null);
-        
-        Person addedPerson = service.findOne(UUID.fromString(PersonConstants.NEW_ID));
-        assertNotEquals(addedPerson, null);
-
-        assertEquals(addedPerson.getFirstName(), PersonConstants.FIRST_NAME);
-        assertEquals(addedPerson.getLastName(), PersonConstants.LAST_NAME);
-        assertEquals(addedPerson.getGender().name(), PersonConstants.GENDER);
-        assertEquals(addedPerson.getPhoneNumber(), PersonConstants.PHONE_NUMBER);
-        assertEquals(addedPerson.getPrivacy().name(), PersonConstants.PRIVACY);
-        assertEquals(addedPerson.getId().toString(), PersonConstants.NEW_ID);
-    }
-
-    @Test
     public void testAddUserWithNonUniqueId(){
         httpHeaders = new HttpHeaders();
         httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID);

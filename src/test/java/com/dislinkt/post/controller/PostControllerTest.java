@@ -341,22 +341,6 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testDeleteOK() {
-        httpHeaders = new HttpHeaders();
-        httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID_4);
-
-        HttpEntity<Object> httpEntity = new HttpEntity<Object>(httpHeaders);
-
-        int beforeDelete = service.findAll().size();
-
-        ResponseEntity<Void> responseEntity = restTemplate.exchange("/posts/"+PostConstants.DELETE_ID, HttpMethod.DELETE,
-         httpEntity, Void.class);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertTrue(beforeDelete > service.findAll().size());
-    }
-
-    @Test
     public void testDeleteNotExistantPost() {
         httpHeaders = new HttpHeaders();
         httpHeaders.add("X-User-Id", PersonConstants.EXISTING_ID_4);

@@ -60,7 +60,7 @@ public class BiographyAttributeController {
         }
     }
 
-    @GetMapping("/{biographyOwnerId}")
+    @GetMapping("/profile/{biographyOwnerId}")
     public ResponseEntity<?> findByPerson(@RequestHeader(value = "X-User-Id", required = false) UUID userId, @PathVariable UUID biographyOwnerId){
         try{
             List<BiographyAttributeDTO> ret = service.findByUser(userId, biographyOwnerId);

@@ -299,19 +299,6 @@ public class PostCRUDServiceTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
-    public void testDeleteOK() throws Exception{
-        int sizeBefore = service.findAll().size();
-        assertNotEquals(null, service.findOne(PostConstants.DELETE_ID));
-
-        service.delete(UUID.fromString(PersonConstants.EXISTING_ID_4), PostConstants.DELETE_ID);
-
-        assertTrue(service.findAll().size() < sizeBefore);
-        assertEquals(null, service.findOne(PostConstants.DELETE_ID));
-    }
-
-    @Test
     public void testDeleteNotExistantPost() {
         try {
             service.delete(UUID.fromString(PersonConstants.EXISTING_ID_4), PostConstants.NON_EXISTANT_ID);

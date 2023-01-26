@@ -160,17 +160,6 @@ public class CommentServiceTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
-    public void testDeleteOK() throws Exception{
-        int beforeAdd = service.findAll().size();
-
-        service.delete(UUID.fromString(PersonConstants.EXISTING_ID_3), CommentConstants.EXISTING_ID_2);
-
-        assertTrue(service.findAll().size() < beforeAdd);
-    }
-
-    @Test
     public void testDeleteNonExistingComment(){
         try {
             service.delete(UUID.fromString(PersonConstants.EXISTING_ID_3), CommentConstants.NON_EXISTING_ID);

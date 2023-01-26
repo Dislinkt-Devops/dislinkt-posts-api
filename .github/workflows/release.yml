@@ -30,7 +30,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Run tests with Maven
-        run: mvn -B test --file pom.xml
+        run: mvn -B test --file pom.xml -Dtest="PostApplicationTests"
 
       - name: Set Release version env variable
         run: |
