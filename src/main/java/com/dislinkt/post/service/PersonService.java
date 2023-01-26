@@ -94,11 +94,8 @@ public class PersonService {
 
         if (user.getBlocked().contains(userToFollow) || userToFollow.getBlocked().contains(user))
             return Boolean.FALSE;
-
-        if (userToFollow.getPrivacy() == ProfilePrivacy.PUBLIC) {
-            user.getFollowers().add(userToFollow);
-        }
-
+            
+        user.getFollowers().add(userToFollow);
         user.getFollowing().add(userToFollow);
         repository.save(user);
 
