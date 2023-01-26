@@ -46,15 +46,6 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testGetByUserIdWhenNonExistingUser() {
-        try {
-            service.findByPersonId(UUID.fromString(PersonConstants.NON_EXISTING_ID), UUID.fromString(PersonConstants.EXISTING_ID));
-        } catch (Exception e) {
-            assertEquals("User with given id doesn't exist!", e.getMessage());
-        }
-    }
-
-    @Test
     public void testGetByUserIdWhenNonExistingPerson() {
         try {
             service.findByPersonId(UUID.fromString(PersonConstants.EXISTING_ID), UUID.fromString(PersonConstants.NON_EXISTING_ID));

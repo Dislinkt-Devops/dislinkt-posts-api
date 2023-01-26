@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import com.dislinkt.post.dto.PersonInfo;
 import com.dislinkt.post.dto.PostDTO;
 import com.dislinkt.post.model.Post;
 
@@ -37,6 +38,10 @@ public class PostMapper implements MapperInterface<Post, PostDTO> {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setComments(commentMapper.toDtoList(new ArrayList<>(entity.getComments())));
         dto.setReactions(reactionMapper.toDtoList(new ArrayList<>(entity.getReactions())));
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.setFirstName(entity.getPerson().getFirstName());
+        personInfo.setLastName(entity.getPerson().getLastName());
+        dto.setPersonInfo(personInfo);
         return dto;
     }
 

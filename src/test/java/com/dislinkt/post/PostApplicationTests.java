@@ -22,6 +22,6 @@ import com.dislinkt.post.service.PostServiceTest;
                 CommentRepositoryTest.class, CommentServiceTest.class,
                 CommentControllerTest.class})
 @TestPropertySource("classpath:test-users.properties")
-class PostApplicationTests {
+public class PostApplicationTests {
 	
 }

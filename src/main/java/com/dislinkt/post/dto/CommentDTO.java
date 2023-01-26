@@ -18,6 +18,16 @@ public class CommentDTO {
     
     private Date createdAt;
 
+    private PersonInfo personInfo;
+
+    public PersonInfo getPersonInfo() {
+        return personInfo;
+    }
+
+    public void setPersonInfo(PersonInfo personInfo) {
+        this.personInfo = personInfo;
+    }
+
     public UUID getId() {
         return id;
     }

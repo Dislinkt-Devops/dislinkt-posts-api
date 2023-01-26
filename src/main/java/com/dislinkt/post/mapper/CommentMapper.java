@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.dislinkt.post.dto.CommentDTO;
+import com.dislinkt.post.dto.PersonInfo;
 import com.dislinkt.post.model.Comment;
 
 public class CommentMapper implements MapperInterface<Comment, CommentDTO>{
@@ -28,6 +29,10 @@ public class CommentMapper implements MapperInterface<Comment, CommentDTO>{
             entity.getPerson().getId(),
             entity.getPost().getId());
         dto.setCreatedAt(entity.getCreatedAt());
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.setFirstName(entity.getPerson().getFirstName());
+        personInfo.setLastName(entity.getPerson().getLastName());
+        dto.setPersonInfo(personInfo);
         return dto;
     }
 

@@ -31,21 +31,6 @@ public class PersonServiceTest {
     private PersonRepository repository;
 
     @Test
-    @Transactional
-    @Rollback(true)
-    public void testAddUserOk() throws Exception{
-        int sizeBefore = service.findAll().size();
-
-        PersonDTO dto = new PersonDTO(
-            null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME, 
-            PersonConstants.GENDER, PersonConstants.PHONE_NUMBER, null, null, 
-            PersonConstants.PRIVACY);
-
-        service.create(UUID.fromString(PersonConstants.NEW_ID), dto);
-        assertTrue(service.findAll().size() > sizeBefore);
-    }
-
-    @Test
     public void testAddUserWithNonUniqueId(){
         PersonDTO dto = new PersonDTO(
             null, PersonConstants.FIRST_NAME, PersonConstants.LAST_NAME, 

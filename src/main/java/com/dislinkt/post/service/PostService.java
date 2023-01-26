@@ -33,23 +33,25 @@ public class PostService {
     }
 
     public List<PostDTO> findByPersonId(UUID userId, UUID postPublisherId) throws Exception{
-        if (personService.findOne(userId) == null){
-            throw new Exception("User with given id doesn't exist!");
-        }
         if (personService.findOne(postPublisherId) == null){
             throw new Exception("Person with given id doesn't exist!");
         }
 
+        Person postPublisher = personService.findOne(postPublisherId);
+        boolean isPublic = postPublisher.getPrivacy() == ProfilePrivacy.PUBLIC;
+
+        if (userId == null && isPublic) {
+            return mapper.toDtoList(repository.findByPersonId(postPublisherId));
+        }
+
         boolean isOwner = userId.compareTo(postPublisherId) == 0;
         Person user = personService.findOne(userId);
-        Person postPublisher = personService.findOne(postPublisherId);
 
         if (user.getBlockedBy().contains(postPublisher))
             throw new Exception("This user has you blocked!");
         if (postPublisher.getBlockedBy().contains(user))
             throw new Exception("You have blocked this user!");
 
-        boolean isPublic = postPublisher.getPrivacy() == ProfilePrivacy.PUBLIC;
         boolean isFollowing = user.getFollowing().contains(postPublisher);
         if (isOwner || isPublic || isFollowing)
             return mapper.toDtoList(repository.findByPersonId(postPublisherId));
