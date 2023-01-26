@@ -23,7 +23,7 @@ public class BiographyAttribute {
     @Column(name = "attribute_type")
     private BiographyAttributeType attributeType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Person person;
 
     public String getAttributeName() {
