@@ -157,9 +157,9 @@ public class PersonController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchPublicProfiles(String keyword) {
+    public ResponseEntity<?> searchProfiles(@RequestHeader(value = "X-User-Id", required = false) UUID id, String keyword) {
         try {
-            ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.searchPublicProfiles(keyword));
+            ResponseDTO<List<PersonDTO>> ret = new ResponseDTO<>(service.searchProfiles(id, keyword));
             return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch (Exception ex) {
             ErrorDTO error = new ErrorDTO(ex.getMessage());

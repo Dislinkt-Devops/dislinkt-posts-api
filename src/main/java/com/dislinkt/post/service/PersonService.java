@@ -231,9 +231,7 @@ public class PersonService {
         if (searched.getBlockedBy().contains(user))
             throw new Exception("You have blocked this user!");
 
-        boolean isFollowing = user.getFollowing().contains(searched);
-
-        if (isOwner || isPublic || isFollowing)
+        if (isOwner || isPublic || (searched.getPrivacy() == ProfilePrivacy.PRIVATE && userId != null))
             return mapper.toDto(searched);
         else
             throw new Exception("You cannot view this user's profile!");
@@ -258,7 +256,7 @@ public class PersonService {
 
     }
 
-    public List<PersonDTO> searchPublicProfiles(String keyword) {
+    public List<PersonDTO> searchProfiles(UUID id, String keyword) {
         if (keyword.isBlank()) {
             return new ArrayList<PersonDTO>();
         }
@@ -266,7 +264,9 @@ public class PersonService {
         List<UUID> userIds = this.httpService.getUserIdsByUsername(keyword); 
 
         return mapper.toDtoList(repository
-            .findProfilesByAllNameTypes(keyword, userIds));
+            .findProfilesByAllNameTypes(keyword, userIds)
+            .stream().filter(x -> x.getPrivacy() == ProfilePrivacy.PUBLIC || 
+            (x.getPrivacy() == ProfilePrivacy.PRIVATE && id != null)).collect(Collectors.toList()));
     }
     
 }
